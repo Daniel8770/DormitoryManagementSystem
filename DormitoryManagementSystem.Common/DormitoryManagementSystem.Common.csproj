@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\DormitoryManagementSystem.Common\DormitoryManagementSystem.Common.csproj" />
-  </ItemGroup>
-
 </Project>
