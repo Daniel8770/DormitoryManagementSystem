@@ -1,11 +1,7 @@
-﻿using DormitoryManagementSystem.Common.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using DormitoryManagementSystem.Domain.Common.Entities;
 
-namespace DormitoryManagementSystem.Common.Aggregates;
+namespace DormitoryManagementSystem.Domain.Common.Aggregates;
+
 public abstract class AggregateRoot : Entity
 {
 }

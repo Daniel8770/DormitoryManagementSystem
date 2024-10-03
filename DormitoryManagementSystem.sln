@@ -14,7 +14,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryManagementSystem.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDormitoryManagementStystem", "TestDormitoryManagementStystem\TestDormitoryManagementStystem.csproj", "{020D30E3-3626-428E-A26B-86E6779EE7B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryManagementSystem.Common", "DormitoryManagementSystem.Common\DormitoryManagementSystem.Common.csproj", "{6F4DB5AD-C29A-4CF3-83B2-91BF54DB19DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryManagementSystem.Domain.Common", "DormitoryManagementSystem.Common\DormitoryManagementSystem.Domain.Common.csproj", "{6F4DB5AD-C29A-4CF3-83B2-91BF54DB19DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryManagementSystem.Application", "DormitoryManagementSystem.Application\DormitoryManagementSystem.Application.csproj", "{0A553883-ADD4-4D36-8745-B77C59993271}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryManagementSystem.Infrastructure", "DormitoryManagementSystem.Infrastructure\DormitoryManagementSystem.Infrastructure.csproj", "{A2C745FF-D0A6-42A1-A478-52898141F9BF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +42,14 @@ Global
 		{6F4DB5AD-C29A-4CF3-83B2-91BF54DB19DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F4DB5AD-C29A-4CF3-83B2-91BF54DB19DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F4DB5AD-C29A-4CF3-83B2-91BF54DB19DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A553883-ADD4-4D36-8745-B77C59993271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A553883-ADD4-4D36-8745-B77C59993271}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A553883-ADD4-4D36-8745-B77C59993271}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A553883-ADD4-4D36-8745-B77C59993271}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2C745FF-D0A6-42A1-A478-52898141F9BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2C745FF-D0A6-42A1-A478-52898141F9BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2C745FF-D0A6-42A1-A478-52898141F9BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2C745FF-D0A6-42A1-A478-52898141F9BF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,8 @@
-﻿using System.Numerics;
+﻿
 
-namespace DormitoryManagementSystem.Common.Entities;
+namespace DormitoryManagementSystem.Domain.Common.Entities;
 
 public abstract class Entity
 {
+
 }

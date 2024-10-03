@@ -1,11 +1,11 @@
-﻿using DormitoryManagementSystem.Common.Entities;
+﻿using DormitoryManagementSystem.Domain.Common.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DormitoryManagementSystem.Domain.AccountingContext.Account;
+namespace DormitoryManagementSystem.Domain.Common.Accounting;
 
 public class AccountId
 {
