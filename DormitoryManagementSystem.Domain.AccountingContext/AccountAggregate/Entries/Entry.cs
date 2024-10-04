@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DormitoryManagementSystem.Domain.AccountingContext.Accounting.Entries;
+namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
 
 public abstract class Entry : Entity
 {

@@ -1,4 +1,6 @@
-﻿using DormitoryManagementSystem.Domain.Common.MoneyModel;
+﻿using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Inflows;
+using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows;
+using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -6,10 +8,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DormitoryManagementSystem.Domain.AccountingContext.Accounting.Entries;
+namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
+
 public class EntryList
 {
-
     private List<Entry> entries;
     public ImmutableList<Entry> Entries { get => entries.ToImmutableList(); }
 

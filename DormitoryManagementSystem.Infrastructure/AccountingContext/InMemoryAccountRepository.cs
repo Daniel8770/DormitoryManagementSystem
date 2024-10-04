@@ -1,4 +1,4 @@
-﻿using DormitoryManagementSystem.Domain.AccountingContext.Accounting;
+﻿using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate;
 using DormitoryManagementSystem.Domain.Common.Accounting;
 
 

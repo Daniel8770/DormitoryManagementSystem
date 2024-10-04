@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DormitoryManagementSystem.Domain.AccountingContext.Accounting;
+namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate;
 
 public interface IAccountRepository
 {

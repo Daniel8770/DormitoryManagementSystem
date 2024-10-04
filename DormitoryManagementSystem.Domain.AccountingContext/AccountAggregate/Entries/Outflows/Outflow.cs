@@ -5,15 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DormitoryManagementSystem.Domain.AccountingContext.Accounting.Entries;
+namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows;
 
-public class Withdrawal : Entry
+public class Outflow : Entry
 {
-    public WithdrawalId Id { get; init; }
-
-    public Withdrawal(WithdrawalId id, Money amount) : base(amount)
+    public Outflow(Money amount) : base(amount)
     {
-        Id = id;
+        
     }
 
     public override Money GetRelativeAmount()

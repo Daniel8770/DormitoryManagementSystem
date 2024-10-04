@@ -1,7 +1,9 @@
 ﻿using Castle.Components.DictionaryAdapter;
 using DormitoryManagementSystem.Application.AccountingContext;
-using DormitoryManagementSystem.Domain.AccountingContext.Accounting;
-using DormitoryManagementSystem.Domain.AccountingContext.Accounting.Entries;
+using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate;
+using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
+using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Inflows.Transactions;
+using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows.Transactions;
 using DormitoryManagementSystem.Domain.Common.Accounting;
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using DormitoryManagementSystem.Infrastructure.AccountingContext;
