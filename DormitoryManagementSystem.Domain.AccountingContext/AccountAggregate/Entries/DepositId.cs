@@ -1,4 +1,4 @@
-﻿namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Inflows.Transactions;
+﻿namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
 public class DepositId
 {
     public Guid Value { get; init; }

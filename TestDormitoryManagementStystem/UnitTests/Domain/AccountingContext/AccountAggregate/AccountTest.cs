@@ -5,10 +5,6 @@ using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entrie
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using FluentAssertions;
 using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Inflows.Transactions;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows.Transactions;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Inflows.Obligations;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows.Obligations;
 
 namespace TestDormitoryManagementStystem.UnitTests.Domain.AccountingContext.AccountAggregate;
 
@@ -17,24 +13,23 @@ public class AccountTest
     [Fact]
     public void GetBalance()
     {
-        Currency currency = Currency.DKK;
-
-        List<Entry> entries = new()
-        {
-            new Deposit(DepositId.Next(), new Money(100.25m, currency)),
-            new Deposit(DepositId.Next(), new Money(300, currency)),
-            new Withdrawal(WithdrawalId.Next(), new Money(100.75m, currency)),
-            new Withdrawal(WithdrawalId.Next(), new Money(100, currency))
-        };
+        Currency currency = Currency.EUR;
 
         Account account = new Account(
             AccountId.Next(),
             new BankInformation(),
-            new Administrator(),
-            new EntryList(entries));
+            new Administrator());
 
+        account.RegisterDeposit(new Money(100.25m, currency));
+        account.RegisterDeposit(new Money(1000.45m, currency));
+        account.RegisterWithdrawal(new Money(100.75m, currency));
+        account.RegisterDebit(new Money(100, currency));
+        account.RegisterDebit(new Money(300, currency));
+        account.RegisterCredit(new Money(3.145m, currency));
+        account.RegisterCredit(new Money(200.58m, currency));
+
+        decimal expectedBalance = 1000.45m + 100.25m - 100.75m;
         Money actualBalance = account.GetBalance();
-        decimal expectedBalance = 100.25m + 300 - 100.75m - 100;
 
         actualBalance.Value.Should().Be(new Money(expectedBalance, currency).Value);
     }
@@ -44,22 +39,17 @@ public class AccountTest
     {
         Currency currency1 = Currency.DKK;
         Currency currency2 = Currency.USD;
+        
+        Account account = new Account(
+                AccountId.Next(),
+                new BankInformation(),
+                new Administrator());
 
-        List<Entry> entries = new()
-        {
-            new Deposit(DepositId.Next(), new Money(100.25m, currency1)),
-            new Deposit(DepositId.Next(), new Money(300, currency1)),
-            new Withdrawal(WithdrawalId.Next(), new Money(100.75m, currency2)),
-            new Withdrawal(WithdrawalId.Next(), new Money(100, currency2))
-        };
 
         Assert.Throws<CurrencyMismatchException>(() =>
         {
-            Account account = new Account(
-                AccountId.Next(),
-                new BankInformation(),
-                new Administrator(),
-                new EntryList(entries));
+            account.RegisterDebit(new Money(100, currency1));
+            account.RegisterCredit(new Money(100, currency2));
         });
     }
 
@@ -71,23 +61,22 @@ public class AccountTest
     [InlineData(0.0000001)]
     public void RegisterDeposit_WhenDepositRegistered_BalanceShouldIncrease(decimal amount)
     {
-        Currency currency = Currency.USD;
-
-        Money depositAmount = new Money(amount, currency);
-
-        List<Entry> entries = new()
-        {
-            new Deposit(DepositId.Next(), new Money(100.25m, currency)),
-            new Withdrawal(WithdrawalId.Next(), new Money(100.75m, currency))
-        };
+        Currency currency = Currency.EUR;
 
         Account account = new Account(
             AccountId.Next(),
             new BankInformation(),
-            new Administrator(),
-            new EntryList(entries));
+            new Administrator());
+
+        account.RegisterDeposit(new Money(100.25m, currency));
+        account.RegisterWithdrawal(new Money(100.75m, currency));
+        account.RegisterDebit(new Money(100, currency));
+        account.RegisterDebit(new Money(300, currency));
+        account.RegisterCredit(new Money(3.145m, currency));
+        account.RegisterCredit(new Money(200.58m, currency));
 
         Money oldBalance = account.GetBalance();
+        Money depositAmount = new Money(amount, currency);
         account.RegisterDeposit(depositAmount);
         Money newBalance = account.GetBalance();
 
@@ -102,23 +91,22 @@ public class AccountTest
     [InlineData(0.0000001)]
     public void RegisterWithdrawal_WhenWithdrawalRegistered_BalanceShouldDecrease(decimal amount)
     {
-        Currency currency = Currency.USD;
-
-        Money withdrawalAmount = new Money(amount, currency);
-
-        List<Entry> entries = new()
-        {
-            new Deposit(DepositId.Next(), new Money(100.25m, currency)),
-            new Withdrawal(WithdrawalId.Next(), new Money(100.75m, currency))
-        };
+        Currency currency = Currency.EUR;
 
         Account account = new Account(
             AccountId.Next(),
             new BankInformation(),
-            new Administrator(),
-            new EntryList(entries));
+            new Administrator());
+
+        account.RegisterDeposit(new Money(100.25m, currency));
+        account.RegisterWithdrawal(new Money(100.75m, currency));
+        account.RegisterDebit(new Money(100, currency));
+        account.RegisterDebit(new Money(300, currency));
+        account.RegisterCredit(new Money(3.145m, currency));
+        account.RegisterCredit(new Money(200.58m, currency));
 
         Money oldBalance = account.GetBalance();
+        Money withdrawalAmount = new Money(amount, currency);
         account.RegisterWithdrawal(withdrawalAmount);
         Money newBalance = account.GetBalance();
 
@@ -130,21 +118,19 @@ public class AccountTest
     {
         Currency currency = Currency.EUR;
 
-        List<Credit> credits = new()
-        {
-            new Credit(CreditId.Next(), new Money(100, currency)),
-            new Credit(CreditId.Next(), new Money(300, currency)),
-            new Credit(CreditId.Next(), new Money(3.145m, currency)),
-            new Credit(CreditId.Next(), new Money(200.58m, currency))
-        };
-
         Account account = new Account(
             AccountId.Next(),
             new BankInformation(),
-            new Administrator(),
-            credits);
+            new Administrator());
 
-        decimal expected = 100 + 300 + 3.145m + 200.58m;
+        account.RegisterDeposit(new Money(100.25m, currency));
+        account.RegisterWithdrawal(new Money(100.75m, currency));
+        account.RegisterDebit(new Money(100, currency));
+        account.RegisterDebit(new Money(300, currency));
+        account.RegisterCredit(new Money(3.145m, currency));
+        account.RegisterCredit(new Money(200.58m, currency));
+
+        decimal expected = 3.145m + 200.58m;
 
         Money totalCredit = account.GetTotalCredit();
 
@@ -156,21 +142,19 @@ public class AccountTest
     {
         Currency currency = Currency.EUR;
 
-        List<Debit> debits = new()
-        {
-            new Debit(DebitId.Next(), new Money(100, currency)),
-            new Debit(DebitId.Next(), new Money(300, currency)),
-            new Debit(DebitId.Next(), new Money(3.145m, currency)),
-            new Debit(DebitId.Next(), new Money(200.58m, currency))
-        };
-
         Account account = new Account(
             AccountId.Next(),
             new BankInformation(),
-            new Administrator(),
-            debits);
+            new Administrator());
 
-        decimal expected = 100 + 300 + 3.145m + 200.58m;
+        account.RegisterDeposit(new Money(100.25m, currency));
+        account.RegisterWithdrawal(new Money(100.75m, currency));
+        account.RegisterDebit(new Money(100, currency));
+        account.RegisterDebit(new Money(300, currency));
+        account.RegisterCredit(new Money(3.145m, currency));
+        account.RegisterCredit(new Money(200.58m, currency));
+
+        decimal expected = 100 + 300;
 
         Money totalDebit = account.GetTotalDebit();
 
@@ -182,31 +166,17 @@ public class AccountTest
     {
         Currency currency = Currency.EUR;
 
-        List<Credit> credits = new()
-        {
-            new Credit(CreditId.Next(), new Money(3.145m, currency)),
-            new Credit(CreditId.Next(), new Money(200.58m, currency))
-        };
-
-        List<Debit> debits = new()
-        {
-            new Debit(DebitId.Next(), new Money(100, currency)),
-            new Debit(DebitId.Next(), new Money(300, currency)),
-        };
-
-        List<Entry> entries = new()
-        {
-            new Deposit(DepositId.Next(), new Money(100.25m, currency)),
-            new Withdrawal(WithdrawalId.Next(), new Money(100.75m, currency))
-        };
-
         Account account = new Account(
             AccountId.Next(),
             new BankInformation(),
-            new Administrator(),
-            new(entries),
-            debits,
-            credits);
+            new Administrator());
+
+        account.RegisterDeposit(new Money(100.25m, currency));
+        account.RegisterWithdrawal(new Money(100.75m, currency));
+        account.RegisterDebit(new Money(100, currency));
+        account.RegisterDebit(new Money(300, currency));
+        account.RegisterCredit(new Money(3.145m, currency));
+        account.RegisterCredit(new Money(200.58m, currency));
 
         decimal expected = 100.25m - 100.75m - 3.145m - 200.58m;
 
@@ -220,31 +190,17 @@ public class AccountTest
     {
         Currency currency = Currency.EUR;
 
-        List<Credit> credits = new()
-        {
-            new Credit(CreditId.Next(), new Money(3.145m, currency)),
-            new Credit(CreditId.Next(), new Money(200.58m, currency))
-        };
-
-        List<Debit> debits = new()
-        {
-            new Debit(DebitId.Next(), new Money(100, currency)),
-            new Debit(DebitId.Next(), new Money(300, currency)),
-        };
-
-        List<Entry> entries = new()
-        {
-            new Deposit(DepositId.Next(), new Money(100.25m, currency)),
-            new Withdrawal(WithdrawalId.Next(), new Money(100.75m, currency))
-        };
-
         Account account = new Account(
             AccountId.Next(),
             new BankInformation(),
-            new Administrator(),
-            new(entries),
-            debits,
-            credits);
+            new Administrator());
+
+        account.RegisterDeposit(new Money(100.25m, currency));
+        account.RegisterWithdrawal(new Money(100.75m, currency));
+        account.RegisterDebit(new Money(100, currency));
+        account.RegisterDebit(new Money(300, currency));
+        account.RegisterCredit(new Money(3.145m, currency));
+        account.RegisterCredit(new Money(200.58m, currency));
 
         decimal expected = 100.25m - 100.75m + 100 + 300 - 3.145m - 200.58m;
 

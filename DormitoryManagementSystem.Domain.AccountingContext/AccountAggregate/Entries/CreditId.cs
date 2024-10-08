@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows.Obligations;
+namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
 public class CreditId
 {
     public Guid Value { get; init; }

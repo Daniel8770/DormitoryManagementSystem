@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows.Transactions;
+namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
 public class WithdrawalId
 {
     public Guid Value { get; init; }

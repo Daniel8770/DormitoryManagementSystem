@@ -2,8 +2,6 @@
 using DormitoryManagementSystem.Application.AccountingContext;
 using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate;
 using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Inflows.Transactions;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows.Transactions;
 using DormitoryManagementSystem.Domain.Common.Accounting;
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using DormitoryManagementSystem.Infrastructure.AccountingContext;
@@ -27,29 +25,26 @@ public class AccountServiceTest
     public AccountServiceTest()
     {
         Currency currency = Currency.EUR;
-        List<Entry> entries = new()
+
+        accountId = AccountId.Next();
+        Account persistedAccount = new Account(accountId, new BankInformation(), new Administrator());
+        persistedAccount.RegisterDeposit(new Money(100.25m, currency));
+        persistedAccount.RegisterDeposit(new Money(300, currency));
+        persistedAccount.RegisterWithdrawal(new Money(100.75m, currency));
+        persistedAccount.RegisterWithdrawal(new Money(100, currency));
+
+        List<Account> persistedAccounts = new()
         {
-            new Deposit(DepositId.Next(), new Money(100.25m, currency)),
-            new Deposit(DepositId.Next(), new Money(300, currency)),
-            new Withdrawal(WithdrawalId.Next(), new Money(100.75m, currency)),
-            new Withdrawal(WithdrawalId.Next(), new Money(100, currency))
+            persistedAccount
         };
 
-        EntryList entryList = new(entries);
-
-        accountId = new AccountId(Guid.NewGuid());
-        List<Account> accounts = new()
-        {
-            new Account(accountId, new BankInformation(), new Administrator(), entryList)
-        };
-
-        accountRepository = new InMemoryAccountRepository(accounts);
+        accountRepository = new InMemoryAccountRepository(persistedAccounts);
         accountService = new AccountService(accountRepository);
         expectedBalance = 100.25m + 300 - 100.75m - 100;
     }
 
     [Fact]
-    public void GetAccountService()
+    public void GetAccountBalance()
     {
         Money result = accountService.GetAccountBalance(accountId);
         result.Value.Should().Be(expectedBalance);
@@ -57,7 +52,7 @@ public class AccountServiceTest
     }
 
     [Fact]
-    public void GetAccountService_WhenWrongId_ShouldThrow()
+    public void GetAccountBalance_WhenWrongIdProvided_ShouldThrow()
     {
         Assert.Throws<Exception>(() =>
         {

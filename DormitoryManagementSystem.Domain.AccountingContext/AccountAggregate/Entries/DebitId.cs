@@ -1,11 +1,11 @@
-﻿using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows;
+﻿using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Inflows.Obligations;
+namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
 
 public class DebitId
 {

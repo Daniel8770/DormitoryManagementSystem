@@ -1,11 +1,5 @@
 ﻿using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate;
 using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Inflows;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Inflows.Obligations;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Inflows.Transactions;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows.Obligations;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows.Transactions;
 using DormitoryManagementSystem.Domain.Common.Aggregates;
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using System.Collections.Immutable;
@@ -20,43 +14,21 @@ public class Account : AggregateRoot
     public ImmutableList<Entry> Entries { get => entries.Entries; }
 
     private EntryList entries;
-    private List<Debit> debits;
-    private List<Credit> credits;
 
     public Account(AccountId id, BankInformation bankInformation, Administrator administrator) 
-        : this(id, bankInformation, administrator, new EntryList(), new List<Debit>(), new List<Credit>())
-    { }
+        : this(id, bankInformation, administrator, EntryList.NewEmpty()) { }
 
-    public Account(AccountId id, BankInformation bankInformation, Administrator administrator, EntryList entries)
-        : this(id, bankInformation, administrator, entries, new List<Debit>(), new List<Credit>())
-    { }
-
-    public Account(AccountId id, BankInformation bankInformation, Administrator administrator, List<Debit> debits)
-        : this(id, bankInformation, administrator, new EntryList(), debits, new List<Credit>())
-    { }
-
-    public Account(AccountId id, BankInformation bankInformation, Administrator administrator, List<Credit> credits)
-        : this(id, bankInformation, administrator, new EntryList(), new List<Debit>(), credits)
-    { }
-
-    public Account(AccountId id,
-        BankInformation bankInformation,
-        Administrator administrator,
-        EntryList entries,
-        List<Debit> debits,
-        List<Credit> credits)
+    private Account(AccountId id, BankInformation bankInformation, Administrator administrator, EntryList entries)
     {
         Id = id;
         BankInformation = bankInformation;
         Administrator = administrator;
 
         if (entries.HasCurrencyMismatch())
-            throw new CurrencyMismatchException("The entries has currency mismatch. All entries must have same currency.");
+            throw new CurrencyMismatchException(
+                "The entries has currency mismatch. All entries must have same currency.");
 
         this.entries = entries;
-        // TODO: what about currency check for these guys
-        this.debits = debits;
-        this.credits = credits;
     }
 
     public void RegisterDeposit(Money amount)
@@ -80,13 +52,13 @@ public class Account : AggregateRoot
     public void RegisterDebit(Money amount)
     {
         Debit debit = new (DebitId.Next(), amount);
-        debits.Add(debit);   
+        entries.Add(debit);   
     }
 
     public void RegisterCredit(Money amount)
     {
         Credit credit = new Credit(CreditId.Next(), amount);
-        credits.Add(credit);
+        entries.Add(credit);
     }
 
     public Money GetDisposableAmount()
@@ -102,22 +74,24 @@ public class Account : AggregateRoot
     public Money GetBalance()
     {
         return entries.Entries
+            .Where(e => e is Deposit || e is Withdrawal)
             .Select(e => e.GetRelativeAmount())
-            .Aggregate((m1, m2) => m1 + m2);
+            .Aggregate((acc, m) => acc + m);
     }
 
     public Money GetTotalCredit()
     {
-        return credits
+        return entries.Entries
+            .Where(e => e is Credit)
             .Select(e => e.Amount)
             .Aggregate((m1, m2) => m1 + m2);
     }
 
     public Money GetTotalDebit()
     {
-        return debits
+        return entries.Entries
+            .Where(e => e is Debit)
             .Select(e => e.Amount)
             .Aggregate((m1, m2) => m1 + m2);
     }
-
 }

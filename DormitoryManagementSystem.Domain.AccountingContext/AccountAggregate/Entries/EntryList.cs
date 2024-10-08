@@ -1,6 +1,4 @@
-﻿using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Inflows;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries.Outflows;
-using DormitoryManagementSystem.Domain.Common.MoneyModel;
+﻿using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -15,26 +13,36 @@ public class EntryList
     private List<Entry> entries;
     public ImmutableList<Entry> Entries { get => entries.ToImmutableList(); }
 
-    public EntryList()
+    public static EntryList NewEmpty()
     {
-        entries = new List<Entry>();
+        return new EntryList(new());
     }
 
     public EntryList(List<Entry> entries)
     {
+        if (HasCurrencyMismatch(entries))
+            throw new CurrencyMismatchException("Not all entries has the same currency.");
+
         this.entries = entries;
     }
 
     public void Add(Entry entry)
     {
-        if (entry.Amount.Currency != entries.First().Amount.Currency)
+        Entry? first = entries.FirstOrDefault();
+
+        if (first is null || entry.Amount.Currency == first.Amount.Currency)
+            entries.Add(entry);
+        else
             throw new CurrencyMismatchException($"The amount of the entry you are " +
                 $"adding doesn't match the same currency as the rest of the entries.");
-
-        entries.Add(entry);
     }
 
     public bool HasCurrencyMismatch()
+    {
+        return HasCurrencyMismatch(entries);
+    }
+
+    private bool HasCurrencyMismatch(List<Entry> entries)
     {
         return !entries.All(e => entries.First().Amount.Currency == e.Amount.Currency);
     }
