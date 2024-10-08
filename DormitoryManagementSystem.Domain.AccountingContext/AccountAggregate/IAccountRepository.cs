@@ -9,7 +9,7 @@ namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate;
 
 public interface IAccountRepository
 {
-    void Save(Account account);
+    void SaveOrUpdate(Account account);
 
     Account? GetById(AccountId id);
 

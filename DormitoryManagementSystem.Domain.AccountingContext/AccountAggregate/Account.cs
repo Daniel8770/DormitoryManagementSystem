@@ -33,19 +33,13 @@ public class Account : AggregateRoot
 
     public void RegisterDeposit(Money amount)
     {
-        Deposit deposit = new(
-            new DepositId(Guid.NewGuid()), 
-            amount);
-
+        Deposit deposit = new(DepositId.Next(), amount);
         entries.Add(deposit);
     }
 
     public void RegisterWithdrawal(Money amount)
     {
-        Withdrawal withdrawal = new(
-            new WithdrawalId(Guid.NewGuid()),
-            amount);
-
+        Withdrawal withdrawal = new(WithdrawalId.Next(), amount);
         entries.Add(withdrawal);
     }
 

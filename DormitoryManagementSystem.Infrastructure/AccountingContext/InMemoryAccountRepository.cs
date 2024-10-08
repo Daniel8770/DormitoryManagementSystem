@@ -20,8 +20,16 @@ public class InMemoryAccountRepository : IAccountRepository
         return accounts.Find(a => a.Id.Value == id.Value);
     }
 
-    public void Save(Account account)
+    public void SaveOrUpdate(Account account)
     {
-        accounts.Add(account);
+        bool accountAlreadyExists = GetById(account.Id) is not null;
+
+        if (accountAlreadyExists)
+        {
+            accounts.Remove(GetById(account.Id)!);
+            accounts.Add(account);
+        }
+        else
+            accounts.Add(account);
     }
 }

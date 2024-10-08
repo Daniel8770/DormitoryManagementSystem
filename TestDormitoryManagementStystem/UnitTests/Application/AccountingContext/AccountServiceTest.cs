@@ -21,10 +21,11 @@ public class AccountServiceTest
 
     private AccountId accountId;
     private decimal expectedBalance;
+    private Currency currency;
 
     public AccountServiceTest()
     {
-        Currency currency = Currency.EUR;
+        currency = Currency.EUR;
 
         accountId = AccountId.Next();
         Account persistedAccount = new Account(accountId, new BankInformation(), new Administrator());
@@ -58,5 +59,29 @@ public class AccountServiceTest
         {
             Money result = accountService.GetAccountBalance(AccountId.Next());
         });
+    }
+
+    [Fact]
+    public void RegisterDepositOnAccount()
+    {
+        Money depositAmmount = new Money(200.55m, currency);
+
+        Money oldBalance = accountService.GetAccountBalance(accountId);
+        accountService.RegisterDepositOnAccount(accountId, depositAmmount);
+        Money newBalance = accountService.GetAccountBalance(accountId);
+
+        newBalance.Value.Should().Be((oldBalance + depositAmmount).Value); 
+    }
+
+    [Fact]
+    public void RegisterWithdrawalOnAccount()
+    {
+        Money withdrawalAmmount = new Money(200.55m, currency);
+
+        Money oldBalance = accountService.GetAccountBalance(accountId);
+        accountService.RegisterWithdrawalOnAccount(accountId, withdrawalAmmount);
+        Money newBalance = accountService.GetAccountBalance(accountId);
+
+        newBalance.Value.Should().Be((oldBalance - withdrawalAmmount).Value);
     }
 }
