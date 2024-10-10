@@ -16,9 +16,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestDormitoryManagementStys
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryManagementSystem.Domain.Common", "DormitoryManagementSystem.Common\DormitoryManagementSystem.Domain.Common.csproj", "{6F4DB5AD-C29A-4CF3-83B2-91BF54DB19DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryManagementSystem.Application", "DormitoryManagementSystem.Application\DormitoryManagementSystem.Application.csproj", "{0A553883-ADD4-4D36-8745-B77C59993271}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryManagementSystem.Application", "DormitoryManagementSystem.Application\DormitoryManagementSystem.Application.csproj", "{0A553883-ADD4-4D36-8745-B77C59993271}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryManagementSystem.Infrastructure", "DormitoryManagementSystem.Infrastructure\DormitoryManagementSystem.Infrastructure.csproj", "{A2C745FF-D0A6-42A1-A478-52898141F9BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryManagementSystem.Infrastructure", "DormitoryManagementSystem.Infrastructure\DormitoryManagementSystem.Infrastructure.csproj", "{A2C745FF-D0A6-42A1-A478-52898141F9BF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryManagementSystem.Domain.Kitchen", "DormitoryManagementSystem.Domain.Kitchen\DormitoryManagementSystem.Domain.Kitchen.csproj", "{2D898A70-D9DC-447D-85D9-6ADD246C733F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,10 @@ Global
 		{A2C745FF-D0A6-42A1-A478-52898141F9BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2C745FF-D0A6-42A1-A478-52898141F9BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2C745FF-D0A6-42A1-A478-52898141F9BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D898A70-D9DC-447D-85D9-6ADD246C733F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D898A70-D9DC-447D-85D9-6ADD246C733F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D898A70-D9DC-447D-85D9-6ADD246C733F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D898A70-D9DC-447D-85D9-6ADD246C733F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
