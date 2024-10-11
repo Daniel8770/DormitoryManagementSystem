@@ -1,7 +1,8 @@
 ﻿using DormitoryManagementSystem.Domain.Common.Aggregates;
-using DormitoryManagementSystem.Domain.Kitchen.KitchenAccountAggregate;
+using DormitoryManagementSystem.Domain.Common.DomainEvents;
+using DormitoryManagementSystem.Domain.KitchenContext.KitchenAccountAggregate;
 
-namespace DormitoryManagementSystem.Domain.Kitchen.KitchenAggregate;
+namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
 
 public class Kitchen : AggregateRoot
 {
@@ -15,20 +16,12 @@ public class Kitchen : AggregateRoot
         Description = KitchenDescription.Create(name);
     }
 
-    public void AddKitchenAccount(KitchenAccountId id)
+    public void AddKitchenAccount(KitchenAccount kitchenAccount)
     {
         if (KitchenAccountId is not null)
             throw new Exception($"There already exists a kitchen account on this kitchen.");
 
-        KitchenAccountId = id;
-    }
-
-    public void SwitchKitchenAccount(KitchenAccountId newId)
-    {
-        if (KitchenAccountId is null)
-            throw new Exception($"There is no existing kitchen account on this kitchen.");
-
-        KitchenAccountId = newId;
+        KitchenAccountId = kitchenAccount.Id;
     }
 
     public void RemoveKitchenAccount()

@@ -1,4 +1,4 @@
-﻿namespace DormitoryManagementSystem.Domain.Kitchen.KitchenAggregate;
+﻿namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
 
 public class KitchenId
 {

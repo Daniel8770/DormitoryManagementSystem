@@ -1,5 +1,5 @@
 ﻿
-namespace DormitoryManagementSystem.Domain.Kitchen.KitchenAccountAggregate;
+namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAccountAggregate;
 public class KitchenAccountId
 {
     public Guid Value { get; init; }

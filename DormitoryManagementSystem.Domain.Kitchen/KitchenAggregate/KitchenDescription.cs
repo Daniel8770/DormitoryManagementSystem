@@ -1,6 +1,6 @@
 ﻿using DormitoryManagementSystem.Domain.Common.ValueObjects;
 
-namespace DormitoryManagementSystem.Domain.Kitchen.KitchenAggregate;
+namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
 
 public class KitchenDescription : ValueObject
 {

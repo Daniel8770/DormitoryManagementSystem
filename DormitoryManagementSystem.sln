@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryManagementSystem.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryManagementSystem.Infrastructure", "DormitoryManagementSystem.Infrastructure\DormitoryManagementSystem.Infrastructure.csproj", "{A2C745FF-D0A6-42A1-A478-52898141F9BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryManagementSystem.Domain.Kitchen", "DormitoryManagementSystem.Domain.Kitchen\DormitoryManagementSystem.Domain.Kitchen.csproj", "{2D898A70-D9DC-447D-85D9-6ADD246C733F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryManagementSystem.Domain.KitchenContext", "DormitoryManagementSystem.Domain.Kitchen\DormitoryManagementSystem.Domain.KitchenContext.csproj", "{2D898A70-D9DC-447D-85D9-6ADD246C733F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

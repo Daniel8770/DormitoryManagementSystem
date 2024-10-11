@@ -1,7 +1,7 @@
 ﻿
 using DormitoryManagementSystem.Domain.Common.Accounting;
 
-namespace DormitoryManagementSystem.Domain.Kitchen.KitchenAccountAggregate;
+namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAccountAggregate;
 
 public class KitchenAccount
 {

@@ -11,7 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configuration\" />
+    <Folder Include="Configuration\Options\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DormitoryManagementSystem.Application\DormitoryManagementSystem.Application.csproj" />
+    <ProjectReference Include="..\DormitoryManagementSystem.Domain.Kitchen\DormitoryManagementSystem.Domain.KitchenContext.csproj" />
+    <ProjectReference Include="..\DormitoryManagementSystem.Infrastructure\DormitoryManagementSystem.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="IntegrationTests\Application\" />
     <Folder Include="IntegrationTests\API\" />
     <Folder Include="IntegrationTests\Infrastructure\" />
     <Folder Include="UnitTests\API\" />

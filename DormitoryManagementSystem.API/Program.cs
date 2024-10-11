@@ -1,17 +1,19 @@
+using DormitoryManagementSystem.API.Configuration.IServiceCollectionExtensions;
+using DormitoryManagementSystem.Infrastructure.Common.DomainEvents;
+using DormitoryManagementSystem.Infrastructure.Common.DomainEvents.Rebus;
 
 namespace DormitoryManagementSystem.API;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
+        builder.AddServices();
 
         builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddEndpointsApiExplorer(); // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddSwaggerGen();
 
         var app = builder.Build();
@@ -29,6 +31,8 @@ public class Program
 
 
         app.MapControllers();
+
+        await app.Services.GetRequiredService<IDomainEventSubscriber>().SubscribeToAllEvents();
 
         app.Run();
     }

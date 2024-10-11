@@ -8,6 +8,20 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DormitoryManagementSystem.Domain.AccountingContext\DormitoryManagementSystem.Domain.AccountingContext.csproj" />
+    <ProjectReference Include="..\DormitoryManagementSystem.Domain.Kitchen\DormitoryManagementSystem.Domain.KitchenContext.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Common\Persistence\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
+    <PackageReference Include="Rebus" Version="8.6.0" />
+    <PackageReference Include="Rebus.ServiceProvider" Version="10.2.0" />
+    <PackageReference Include="Rebus.SqlServer" Version="8.1.2" />
   </ItemGroup>
 
 </Project>
