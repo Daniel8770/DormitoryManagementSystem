@@ -26,7 +26,7 @@ public class Money : ValueObject
     public static Money operator +(Money x, Money y)
     {
         if (x.Currency != y.Currency)
-            throw CurrencyMismatchException.CreateExceptionWith(x, y); 
+            throw CurrencyMismatchException.CreateExceptionForOperator(x, y); 
 
         return new Money(x.Value + y.Value, x.Currency);
     }
@@ -34,7 +34,7 @@ public class Money : ValueObject
     public static Money operator -(Money x, Money y)
     {
         if (x.Currency != y.Currency)
-            throw CurrencyMismatchException.CreateExceptionWith(x, y); 
+            throw CurrencyMismatchException.CreateExceptionForOperator(x, y); 
 
         return new Money(x.Value - y.Value, x.Currency);
     }
@@ -42,7 +42,7 @@ public class Money : ValueObject
     public static Money operator *(Money x, Money y)
     {
         if (x.Currency != y.Currency)
-            throw CurrencyMismatchException.CreateExceptionWith(x, y); 
+            throw CurrencyMismatchException.CreateExceptionForOperator(x, y); 
 
         return new Money(x.Value * y.Value, x.Currency);
     }
@@ -50,9 +50,60 @@ public class Money : ValueObject
     public static Money operator /(Money x, Money y)
     {
         if (x.Currency != y.Currency)
-            throw CurrencyMismatchException.CreateExceptionWith(x, y); 
+            throw CurrencyMismatchException.CreateExceptionForOperator(x, y); 
 
         return new Money(x.Value / y.Value, x.Currency);
     }
 
+    public static bool operator ==(Money x, Money y)
+    {
+        if (x is null && y is null)
+            return true;
+
+        if (x is Money && y is null)
+            return false;
+
+        if (x is null && y is Money)
+            return false;
+
+        if (x.Currency != y.Currency)
+            throw CurrencyMismatchException.CreateExceptionForOperator(x, y);
+
+        return x.Value == y.Value;
+    }
+
+    public static bool operator !=(Money x, Money y)
+    {
+        return !(x == y);
+    }
+
+    public static bool operator >(Money x, Money y)
+    {
+        if (x.Currency != y.Currency)
+            throw CurrencyMismatchException.CreateExceptionForOperator(x, y);
+
+        return x.Value > y.Value;
+    }
+
+    public static bool operator <(Money x, Money y)
+    {
+        if (x.Currency != y.Currency)
+            throw CurrencyMismatchException.CreateExceptionForOperator(x, y);
+
+        return x.Value < y.Value;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+            return false;
+
+        Money other = (Money)obj;
+        return this == other;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Value, Currency);
+    }
 }

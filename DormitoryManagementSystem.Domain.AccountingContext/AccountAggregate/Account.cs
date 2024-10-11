@@ -1,6 +1,8 @@
 ﻿using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate;
 using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
+using DormitoryManagementSystem.Domain.AccountingContext.DomainEvents;
 using DormitoryManagementSystem.Domain.Common.Aggregates;
+using DormitoryManagementSystem.Domain.Common.DomainEvents;
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using System.Collections.Immutable;
 
@@ -14,6 +16,7 @@ public class Account : AggregateRoot
     public ImmutableList<Entry> Entries { get => entries.Entries; }
 
     private EntryList entries;
+    private decimal? disposableAmountLowerLimit;
 
     public Account(AccountId id, BankInformation bankInformation, Administrator administrator) 
         : this(id, bankInformation, administrator, EntryList.NewEmpty()) { }
@@ -31,6 +34,16 @@ public class Account : AggregateRoot
         this.entries = entries;
     }
 
+    public void SetDispoableAmountLowerLimit(decimal limit)
+    {
+        disposableAmountLowerLimit = limit;
+    }
+
+    public void RemoveDispoableAmountLowerLimit()
+    {
+        disposableAmountLowerLimit = null;
+    }
+
     public void RegisterDeposit(Money amount)
     {
         Deposit deposit = new(DepositId.Next(), amount);
@@ -39,8 +52,11 @@ public class Account : AggregateRoot
 
     public void RegisterWithdrawal(Money amount)
     {
+        Money disposableBefore = GetDisposableAmount();
         Withdrawal withdrawal = new(WithdrawalId.Next(), amount);
         entries.Add(withdrawal);
+        Money disposableAfter = GetDisposableAmount();
+        RaiseIfDispoableAmountLowerLimitBreached(disposableBefore, disposableAfter);
     }
 
     public void RegisterDebit(Money amount)
@@ -51,8 +67,11 @@ public class Account : AggregateRoot
 
     public void RegisterCredit(Money amount)
     {
+        Money disposableBefore = GetDisposableAmount();
         Credit credit = new Credit(CreditId.Next(), amount);
         entries.Add(credit);
+        Money disposableAfter = GetDisposableAmount();
+        RaiseIfDispoableAmountLowerLimitBreached(disposableBefore, disposableAfter);
     }
 
     public Money GetDisposableAmount()
@@ -88,4 +107,18 @@ public class Account : AggregateRoot
             .Select(e => e.Amount)
             .Aggregate((m1, m2) => m1 + m2);
     }
+
+    private void RaiseIfDispoableAmountLowerLimitBreached(Money disposableBefore, Money disposableAfter)
+    {
+        if (disposableAmountLowerLimit is null)
+            return;
+
+        if (disposableBefore.Value >= disposableAmountLowerLimit && disposableAfter.Value < disposableAmountLowerLimit)
+            DomainEventStore.Raise(new DisposableAmountLowerLimitBreached(
+                Id,
+                disposableAmountLowerLimit ?? 0,
+                disposableAfter)
+            );
+    }
+    
 }
