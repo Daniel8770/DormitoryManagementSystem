@@ -1,4 +1,4 @@
-﻿using DormitoryManagementSystem.Domain.KitchenContext.KitchenAccountAggregate;
+﻿using DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenAccountAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
