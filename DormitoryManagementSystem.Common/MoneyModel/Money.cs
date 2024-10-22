@@ -66,8 +66,8 @@ public class Money : ValueObject
         if (x is null && y is Money)
             return false;
 
-        if (x.Currency != y.Currency)
-            throw CurrencyMismatchException.CreateExceptionForOperator(x, y);
+        if (x?.Currency != y.Currency)
+            throw CurrencyMismatchException.CreateExceptionForOperator(x!, y);
 
         return x.Value == y.Value;
     }
@@ -91,6 +91,11 @@ public class Money : ValueObject
             throw CurrencyMismatchException.CreateExceptionForOperator(x, y);
 
         return x.Value < y.Value;
+    }
+
+    public Money DivideBy(int n)
+    {
+        return new(Value / n, Currency);
     }
 
     public override bool Equals(object? obj)

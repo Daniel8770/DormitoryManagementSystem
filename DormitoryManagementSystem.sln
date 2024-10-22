@@ -22,7 +22,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryManagementSystem.I
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryManagementSystem.Domain.KitchenContext", "DormitoryManagementSystem.Domain.Kitchen\DormitoryManagementSystem.Domain.KitchenContext.csproj", "{2D898A70-D9DC-447D-85D9-6ADD246C733F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryManagementSystem.Domain.NotificationContext", "DormitoryManagementSystem.Domain.NotificationContext\DormitoryManagementSystem.Domain.NotificationContext.csproj", "{613E22AF-4556-4800-9774-1B271308258B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DormitoryManagementSystem.Domain.NotificationContext", "DormitoryManagementSystem.Domain.NotificationContext\DormitoryManagementSystem.Domain.NotificationContext.csproj", "{613E22AF-4556-4800-9774-1B271308258B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DormitoryManagementSystem.Domain.SharedExpensesContext", "DormitoryManagementSystem.Domain.SharedExpensesContext\DormitoryManagementSystem.Domain.SharedExpensesContext.csproj", "{F9B9FA5F-EABD-4B3E-B5C7-EE352566E749}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +64,10 @@ Global
 		{613E22AF-4556-4800-9774-1B271308258B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{613E22AF-4556-4800-9774-1B271308258B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{613E22AF-4556-4800-9774-1B271308258B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9B9FA5F-EABD-4B3E-B5C7-EE352566E749}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9B9FA5F-EABD-4B3E-B5C7-EE352566E749}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9B9FA5F-EABD-4B3E-B5C7-EE352566E749}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9B9FA5F-EABD-4B3E-B5C7-EE352566E749}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

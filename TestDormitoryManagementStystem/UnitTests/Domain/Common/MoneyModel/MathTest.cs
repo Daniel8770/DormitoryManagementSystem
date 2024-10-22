@@ -125,4 +125,16 @@ public class MathTest
         });
     }
 
+    [Theory]
+    [InlineData(100, 4, 25)]
+    [InlineData(375.25, 2, 187.625)]
+    [InlineData(3.141, 1, 3.141)]
+    [InlineData(3.141, 100, 0.03141)]
+    public void DivideBy(decimal amount, int n, decimal expected)
+    {
+        Money money = new Money(amount, Currency.DKK);
+        Money result = money.DivideBy(n);
+        result.Value.Should().Be(expected);  
+    }
+
 }

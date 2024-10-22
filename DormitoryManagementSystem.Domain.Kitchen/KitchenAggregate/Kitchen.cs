@@ -1,6 +1,7 @@
 ﻿using DormitoryManagementSystem.Domain.Common.Aggregates;
 using DormitoryManagementSystem.Domain.Common.DomainEvents;
 using DormitoryManagementSystem.Domain.Common.Exceptions;
+using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenAccountAggregate;
 using DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenBalanceAggregate;
 using System.Collections.Immutable;
@@ -38,27 +39,22 @@ public class Kitchen : AggregateRoot
         KitchenAccountId = null;
     }
 
-    public KitchenBalance OpenKitchenBalanceWithAllResidents(string name) 
+    public KitchenBalance OpenKitchenBalanceWithAllResidents(string name, Currency currency) 
     {
-        return OpenKitchenBalance(name, Residents);
+        return OpenKitchenBalance(name, GetResidentIds(), currency);
     }
 
-    public KitchenBalance OpenKitchenBalanceWithAllResidentsPLusExternalPartcipants(string name, IEnumerable<Resident> participants)
+    public KitchenBalance OpenKitchenBalanceWithSomeResidents(string name, IEnumerable<ResidentId> residents, Currency currency)
     {
-        return OpenKitchenBalance(name, Residents.Concat(participants));
-    }
-
-    public KitchenBalance OpenKitchenBalanceWithSomeResidents(string name, IEnumerable<Resident> residents)
-    {
-        if (residents.Any(r => !Residents.Contains(r)))
+        if (residents.Any(r => !GetResidentIds().Contains(r)))
             throw new DomainException("Some of the residents are not part of this kitchen.");
 
-        return OpenKitchenBalance(name, residents);
+        return OpenKitchenBalance(name, residents, currency);
     }
 
-    public KitchenBalance OpenKitchenBalance(string name, IEnumerable<Resident> participants)
+    private KitchenBalance OpenKitchenBalance(string name, IEnumerable<ResidentId> participants, Currency currency)
     {
-        return new KitchenBalance(Guid.NewGuid(), name, Id, participants);
+        return new KitchenBalance(Guid.NewGuid(), name, Id, participants, currency);
     }
 
     public void UpdateRules(string newRules)
@@ -80,4 +76,6 @@ public class Kitchen : AggregateRoot
     {
         Information = Information.DeleteDescription();
     }
+
+    private IEnumerable<ResidentId> GetResidentIds() => Residents.Select(r => r.Id);
 }

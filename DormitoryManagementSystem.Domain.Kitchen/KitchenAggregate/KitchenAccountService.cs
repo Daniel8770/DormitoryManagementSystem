@@ -28,12 +28,12 @@ public class KitchenAccountService
         KitchenAccountId kitchenAccountId = KitchenAccountId.Next();
         KitchenAccount newKitchenAccount = new(kitchenAccountId);
 
-        kitchen.AddKitchenAccount(newKitchenAccount);
+        kitchen.OpenKitchenAccount(newKitchenAccount.Id);
 
         kitchenRepository.SaveOrUpdate(kitchen);
         kitchenAccountRepository.SaveOrUpdate(newKitchenAccount);
 
-        // TODO: raise event
+        // TODO: publish events 
     }
 
     public void GetKitchenAccount(KitchenAccountId id)
