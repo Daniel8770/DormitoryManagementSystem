@@ -7,7 +7,6 @@ using Rebus.Retry.Simple;
 using Microsoft.Extensions.Configuration;
 using DormitoryManagementSystem.Infrastructure.Common.DomainEvents;
 using DormitoryManagementSystem.Domain.KitchenContext.DomainEvents;
-using DormitoryManagementSystem.Domain.Common.DomainEvents;
 using DormitoryManagementSystem.Infrastructure.Common.DomainEvents.Rebus;
 using DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
 using DormitoryManagementSystem.Infrastructure.KitchenContext;
