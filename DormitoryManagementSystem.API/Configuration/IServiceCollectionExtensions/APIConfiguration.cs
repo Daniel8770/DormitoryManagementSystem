@@ -3,7 +3,7 @@ using DormitoryManagementSystem.Application.Configuration;
 
 namespace DormitoryManagementSystem.API.Configuration.IServiceCollectionExtensions;
 
-public static class ApplicationConfiguration
+public static class APIConfiguration
 {
     public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
     {

@@ -7,12 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <Compile Remove="Configuration\Options\**" />
+    <Content Remove="Configuration\Options\**" />
+    <EmbeddedResource Remove="Configuration\Options\**" />
+    <None Remove="Configuration\Options\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configuration\Options\" />
-    <Folder Include="DTOs\Responses\" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
