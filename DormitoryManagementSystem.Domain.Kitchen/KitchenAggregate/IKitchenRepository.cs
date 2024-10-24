@@ -7,7 +7,10 @@ using System.Threading.Tasks;
 namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
 public interface IKitchenRepository
 {
-    Kitchen? GetById(KitchenId id);
+    Task<Kitchen?> GetById(KitchenId id);
 
-    void SaveOrUpdate(Kitchen kitchen);
+    Task Save(Kitchen kitchen);
+
+    Task Update(Kitchen kitchen);
+
 }

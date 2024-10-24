@@ -2,6 +2,7 @@
 using DormitoryManagementSystem.Domain.Common.DomainEvents;
 using DormitoryManagementSystem.Domain.Common.Exceptions;
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
+using DormitoryManagementSystem.Domain.KitchenContext.DomainEvents;
 using DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenAccountAggregate;
 using DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenBalanceAggregate;
 using System.Collections.Immutable;
@@ -54,7 +55,7 @@ public class Kitchen : AggregateRoot
 
     private KitchenBalance OpenKitchenBalance(string name, IEnumerable<ResidentId> participants, Currency currency)
     {
-        return new KitchenBalance(Guid.NewGuid(), name, Id, participants, currency);
+        return KitchenBalance.CreateNewBalanceOnKitchen(KitchenBalanceId.Next(), name, Id, participants, currency);
     }
 
     public void UpdateRules(string newRules)

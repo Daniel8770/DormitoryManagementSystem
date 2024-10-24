@@ -6,6 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DormitoryManagementSystem.Domain.KitchenContext.DomainEvents;
-public class KitchenAccountCreated : DomainEvent
+public class KitchenAccountCreatedEvent : DomainEvent
 {
+
+
+
 }

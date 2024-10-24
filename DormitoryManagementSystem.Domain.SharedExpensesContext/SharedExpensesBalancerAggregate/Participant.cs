@@ -1,8 +1,9 @@
 ﻿using DormitoryManagementSystem.Domain.Common.Entities;
 
 
-namespace DormitoryManagementSystem.Domain.SharedExpensesContext;
-internal class Participant : Entity
+
+namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
+public class Participant : Entity
 {
     public Guid Id { get; init; }
 
@@ -11,7 +12,7 @@ internal class Participant : Entity
         Id = id;
     }
 
-    public static bool operator ==(Participant left, Participant right) => 
+    public static bool operator ==(Participant left, Participant right) =>
         left.Equals(right);
 
     public static bool operator !=(Participant left, Participant right) =>

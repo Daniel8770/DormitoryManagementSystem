@@ -6,7 +6,7 @@ public class KitchenId
 
 
     public static KitchenId Next() => new(Guid.NewGuid());
-    private KitchenId(Guid value)
+    public KitchenId(Guid value)
     {
         Value = value;
     }

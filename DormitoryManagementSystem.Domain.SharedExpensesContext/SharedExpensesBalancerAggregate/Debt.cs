@@ -2,8 +2,8 @@
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 
 
-namespace DormitoryManagementSystem.Domain.SharedExpensesContext;
-internal class Debt : Entity
+namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
+public class Debt : Entity
 {
     public Guid Id { get; init; }
     public Guid PaymentId { get; init; }

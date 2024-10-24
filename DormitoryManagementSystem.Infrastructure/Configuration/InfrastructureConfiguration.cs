@@ -9,19 +9,30 @@ using DormitoryManagementSystem.Infrastructure.Common.DomainEvents;
 using DormitoryManagementSystem.Domain.KitchenContext.DomainEvents;
 using DormitoryManagementSystem.Domain.Common.DomainEvents;
 using DormitoryManagementSystem.Infrastructure.Common.DomainEvents.Rebus;
+using DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
+using DormitoryManagementSystem.Infrastructure.KitchenContext;
+using DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenBalanceAggregate;
+using DormitoryManagementSystem.Infrastructure.KitchenContext.Economy;
+using DormitoryManagementSystem.Domain.KitchenContext.IntegrationMessages;
+using DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
+using DormitoryManagementSystem.Infrastructure.SharedExpensesContext;
+using DormitoryManagementSystem.Domain.AccountingContext.DomainEvents;
+using DormitoryManagementSystem.Domain.SharedExpensesContext.IntegrationMessages;
 
 namespace DormitoryManagementSystem.Infrastructure.Configuration;
 public static class InfrastructureConfiguration
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfigurationSection infraStructureConfig)
     {
-        services.AddScoped<DomainEventPublisher, RebusDomainEventPublisher>();
+        services.AddSingleton<DomainEventPublisher, RebusDomainEventPublisher>();
         services.AddSingleton<IDomainEventSubscriber, RebusDomainEventSubscriber>();
 
         services.Configure<RebusOptions>(infraStructureConfig.GetRequiredSection(RebusOptions.SectionName));
         services.ConfigureRebus(GetOptions<RebusOptions>(infraStructureConfig, RebusOptions.SectionName));
 
-        services.ConfigureEntityFrameworkd();
+        services.ConfigureEntityFramework();
+
+        services.AddInMemoryRepositories();
 
         return services;
     }
@@ -36,7 +47,12 @@ public static class InfrastructureConfiguration
                 options.InputQueue)
             );
             configure.Subscriptions(s => s.StoreInSqlServer(options.ConnectionString, options.SubscriptionTable));
-            configure.Routing(r => r.TypeBased().MapAssemblyNamespaceOf<KitchenAccountCreated>(options.InputQueue));
+            configure.Routing(r => 
+                r.TypeBased().MapAssemblyNamespaceOf<KitchenAccountCreatedEvent>(options.InputQueue)
+                .MapAssemblyNamespaceOf<CreateSharedExpenseBalancerMessage>(options.InputQueue)
+                .MapAssemblyNamespaceOf<DisposableAmountLowerLimitBreachedEvent>(options.InputQueue)
+                .MapAssemblyNamespaceOf<SharedExpenseBalancerCreatedMessage>(options.InputQueue)
+            );
             configure.Options(o =>
             {
                 o.RetryStrategy(errorQueueName: options.ErrorQueue, maxDeliveryAttempts: options.MaxDeliveryAttempts);
@@ -49,8 +65,21 @@ public static class InfrastructureConfiguration
         return services;
     }
 
-    public static IServiceCollection ConfigureEntityFrameworkd(this IServiceCollection services)
+    public static IServiceCollection ConfigureEntityFramework(this IServiceCollection services)
     {
+        return services;
+    }
+
+    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        return services;
+    }
+
+    public static IServiceCollection AddInMemoryRepositories(this IServiceCollection services)
+    {
+        services.AddSingleton<IKitchenRepository, InMemoryKitchenRepository>();
+        services.AddSingleton<IKitchenBalanceRepository, InMemoryKitchenBalanceRepository>();
+        services.AddSingleton<ISharedExpensesBalancerRepository, InMemorySharedExpensesBalancerRepository>();
         return services;
     }
 

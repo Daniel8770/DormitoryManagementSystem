@@ -1,6 +1,6 @@
 using DormitoryManagementSystem.API.Configuration.IServiceCollectionExtensions;
+using DormitoryManagementSystem.API.Middlewares;
 using DormitoryManagementSystem.Infrastructure.Common.DomainEvents;
-using DormitoryManagementSystem.Infrastructure.Common.DomainEvents.Rebus;
 
 namespace DormitoryManagementSystem.API;
 
@@ -18,6 +18,7 @@ public class Program
 
         var app = builder.Build();
 
+
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
@@ -26,9 +27,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
-
         app.UseAuthorization();
-
+        app.UseDomainEventsPublisher();
 
         app.MapControllers();
 

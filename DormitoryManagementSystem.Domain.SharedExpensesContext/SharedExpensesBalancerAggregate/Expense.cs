@@ -6,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DormitoryManagementSystem.Domain.SharedExpensesContext;
-internal class Expense : Entity
+namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
+public class Expense : Entity
 {
     public Guid Id { get; init; }
     public Money Amount { get; private set; }

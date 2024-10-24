@@ -5,9 +5,8 @@ namespace DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenAccount
 public class KitchenAccount
 {
     public KitchenAccountId Id { get; init; }
-    public AccountId AccountId { get; init; }
+    public AccountId? AccountId { get; init; }
     public bool CanBeClosed => !hasDebit && !hasCredit;
-
 
     private bool hasDebit;
     private bool hasCredit;

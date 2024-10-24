@@ -3,11 +3,12 @@ using DormitoryManagementSystem.Domain.Common.Exceptions;
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using DormitoryManagementSystem.Domain.SharedExpensesContext.MinimumTransactionDebtSettlementAlgorithm;
 
-namespace DormitoryManagementSystem.Domain.SharedExpensesContext;
+namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
 
-internal class SharedExpensesBalancer : AggregateRoot
+public class SharedExpensesBalancer : AggregateRoot
 {
-    public Guid Id { get; init; }
+    public SharedExpensesBalancerId Id { get; init; }
+    public Guid KitchenId { get; init; }
     public Currency Currency { get; private set; }
 
     private List<Participant> participants;
@@ -15,13 +16,29 @@ internal class SharedExpensesBalancer : AggregateRoot
     private List<Debt> debts = new();
     private IMinimumTransactionDebtSettler debtSettler;
 
-    internal SharedExpensesBalancer(
-        Guid id,
+    public static SharedExpensesBalancer CreateNew(
+        Guid kitchenId,
+        Currency currency,
+        List<Participant> participants,
+        IMinimumTransactionDebtSettler debtSettler)
+    {
+        return new SharedExpensesBalancer(
+            SharedExpensesBalancerId.Next(),
+            kitchenId,
+            currency,
+            participants,
+            debtSettler);
+    }
+
+    private SharedExpensesBalancer(
+        SharedExpensesBalancerId id,
+        Guid kitchenId,
         Currency currency,
         List<Participant> participants,
         IMinimumTransactionDebtSettler debtSettler)
     {
         Id = id;
+        KitchenId = kitchenId;
         Currency = currency;
         this.participants = participants;
         this.debtSettler = debtSettler;
@@ -46,7 +63,7 @@ internal class SharedExpensesBalancer : AggregateRoot
     {
         if (amount.Currency != Currency)
             throw new DomainException($"The expense currency does not match the currency of the kitchen balance {Id}.");
-        
+
         AssertParticipation(creditor);
 
         IEnumerable<Participant> debtorsNotPartOfSharedExpense = debtors.Where(d => !participants.Contains(d));
@@ -55,7 +72,7 @@ internal class SharedExpensesBalancer : AggregateRoot
                 + string.Join(", ", debtorsNotPartOfSharedExpense.Select(d => d.Id)));
     }
 
-   
+
 
     private void RecordDebtsOf(Expense expense)
     {
@@ -98,8 +115,9 @@ internal class SharedExpensesBalancer : AggregateRoot
 
     public List<Participant> GetDebtorsOf(Participant creditor)
     {
-        AssertParticipation(creditor);
-        return debtSettler.GetDebtorsOf(creditor);
+        //AssertParticipation(creditor);
+        //return debtSettler.GetDebtorsOf(creditor);
+        throw new NotImplementedException();    // TODO
     }
 
     private void AssertParticipation(Participant creditor)

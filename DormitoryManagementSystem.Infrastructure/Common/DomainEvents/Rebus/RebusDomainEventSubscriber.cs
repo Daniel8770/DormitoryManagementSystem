@@ -1,5 +1,7 @@
 ﻿using DormitoryManagementSystem.Domain.Common.DomainEvents;
 using DormitoryManagementSystem.Domain.KitchenContext.DomainEvents;
+using DormitoryManagementSystem.Domain.KitchenContext.IntegrationMessages;
+using DormitoryManagementSystem.Domain.SharedExpensesContext.IntegrationMessages;
 using Rebus.Bus;
 using System;
 using System.Collections.Generic;
@@ -19,9 +21,13 @@ public class RebusDomainEventSubscriber : IDomainEventSubscriber
 
     public async Task SubscribeToAllEvents()
     {
-        Task kitchenAccountCreatedSubscription = bus.Subscribe<KitchenAccountCreated>();
-
-        await kitchenAccountCreatedSubscription;
+        Task kitchenBalanceCreatedEventSubscription = bus.Subscribe<KitchenBalanceCreatedEvent>();
+        Task createSharedExpenseBalancerMessageSubscription = bus.Subscribe<CreateSharedExpenseBalancerMessage>();
+        Task sharedExpenseBalancerCreatedMessageSubscription = bus.Subscribe<SharedExpenseBalancerCreatedMessage>();
+        
+        await kitchenBalanceCreatedEventSubscription;
+        await createSharedExpenseBalancerMessageSubscription;
+        await sharedExpenseBalancerCreatedMessageSubscription;
     }
 
 

@@ -1,48 +1,48 @@
-﻿using DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenAccountAggregate;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenAccountAggregate;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Runtime.CompilerServices;
+//using System.Text;
+//using System.Threading.Tasks;
 
-namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
-public class KitchenAccountService
-{
-    private IKitchenRepository kitchenRepository;
-    private IKitchenAccountRepository kitchenAccountRepository;
+//namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
+//public class KitchenAccountService
+//{
+//    private IKitchenRepository kitchenRepository;
+//    private IKitchenAccountRepository kitchenAccountRepository;
 
-    public KitchenAccountService(IKitchenRepository kitchenRepository, IKitchenAccountRepository kitchenAccountRepository)
-    {
-        this.kitchenRepository = kitchenRepository;
-        this.kitchenAccountRepository = kitchenAccountRepository;
-    }
+//    public KitchenAccountService(IKitchenRepository kitchenRepository, IKitchenAccountRepository kitchenAccountRepository)
+//    {
+//        this.kitchenRepository = kitchenRepository;
+//        this.kitchenAccountRepository = kitchenAccountRepository;
+//    }
 
-    public void CreateNewOnKitchen(KitchenId id)
-    {
-        Kitchen? kitchen = kitchenRepository.GetById(id);
+//    public void CreateNewOnKitchen(KitchenId id)
+//    {
+//        Kitchen? kitchen = kitchenRepository.GetById(id);
 
-        if (kitchen is null)
-            throw new Exception($"Kitchen {id.Value} not found.");
+//        if (kitchen is null)
+//            throw new Exception($"Kitchen {id.Value} not found.");
 
-        KitchenAccountId kitchenAccountId = KitchenAccountId.Next();
-        KitchenAccount newKitchenAccount = new(kitchenAccountId);
+//        KitchenAccountId kitchenAccountId = KitchenAccountId.Next();
+//        KitchenAccount newKitchenAccount = new(kitchenAccountId);
 
-        kitchen.OpenKitchenAccount(newKitchenAccount.Id);
+//        kitchen.OpenKitchenAccount(newKitchenAccount.Id);
 
-        kitchenRepository.SaveOrUpdate(kitchen);
-        kitchenAccountRepository.SaveOrUpdate(newKitchenAccount);
+//        kitchenRepository.SaveOrUpdate(kitchen);
+//        kitchenAccountRepository.SaveOrUpdate(newKitchenAccount);
 
-        // TODO: publish events 
-    }
+//        // TODO: publish events 
+//    }
 
-    public void GetKitchenAccount(KitchenAccountId id)
-    {
-        KitchenAccount? kitchenAccount = kitchenAccountRepository.GetById(id);
+//    public void GetKitchenAccount(KitchenAccountId id)
+//    {
+//        KitchenAccount? kitchenAccount = kitchenAccountRepository.GetById(id);
 
-        if (kitchenAccount is null)
-            throw new Exception($"Kitchen account {id.Value} not found.");
+//        if (kitchenAccount is null)
+//            throw new Exception($"Kitchen account {id.Value} not found.");
 
         
-    }
-}
+//    }
+//}

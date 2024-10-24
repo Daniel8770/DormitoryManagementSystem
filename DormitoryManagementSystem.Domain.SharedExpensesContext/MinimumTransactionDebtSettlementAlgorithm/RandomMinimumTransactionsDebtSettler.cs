@@ -1,11 +1,12 @@
-﻿using System;
+﻿using DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace DormitoryManagementSystem.Domain.SharedExpensesContext.MinimumTransactionDebtSettlementAlgorithm;
-internal class RandomMinimumTransactionsDebtSettler : IMinimumTransactionDebtSettler
+public class RandomMinimumTransactionsDebtSettler : IMinimumTransactionDebtSettler
 {
     public List<Participant> GetDebtorsOf(Participant creditor, List<Participant> participants)
     {
