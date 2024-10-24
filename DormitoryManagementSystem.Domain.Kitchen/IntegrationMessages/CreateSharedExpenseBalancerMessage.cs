@@ -6,14 +6,14 @@ using DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalan
 namespace DormitoryManagementSystem.Domain.KitchenContext.IntegrationMessages;
 public class CreateSharedExpenseBalancerMessage : IntegrationMessage
 {
-    public Guid KitchenId { get; set; }
-    public IEnumerable<Participant> Participants { get; set; }
-    public Currency Currency { get; set; }
+    public Guid KitchenBalanceId { get; set; }
+    public List<Participant> Participants { get; set; }
+    public string Currency { get; set; }
 
-    public CreateSharedExpenseBalancerMessage(Guid kitchenId, IEnumerable<Participant> participants, Currency currency)
+    public CreateSharedExpenseBalancerMessage(Guid kitchenBalanceId, IEnumerable<Participant> participants, string currency)
     {
-        KitchenId = kitchenId;
-        Participants = participants;
+        KitchenBalanceId = kitchenBalanceId;
+        Participants = participants.ToList();
         Currency = currency;
     }
 }

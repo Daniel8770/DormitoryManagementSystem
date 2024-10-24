@@ -29,7 +29,7 @@ public class KitchenBalance : AggregateRoot
         Currency currency)
     {
         KitchenBalance newBalance = new KitchenBalance(id, name, kitchenId, participants, currency);
-        DomainEventStore.Raise(new KitchenBalanceCreatedEvent(kitchenId, participants, currency));
+        DomainEventStore.Raise(new KitchenBalanceCreatedEvent(newBalance.Id.Value, participants.Select(id => id.Value), currency.ToString()));
         return newBalance;
     }
 

@@ -18,10 +18,20 @@ public class Kitchen : AggregateRoot
 
     private List<Resident> residents = new();
 
-    public Kitchen(KitchenId id, string name)
+    public static Kitchen CreateNew(string name) => new Kitchen(KitchenId.Next(), name);
+
+    private Kitchen(KitchenId id, string name)
     {
         Id = id;
         Information = KitchenInformation.Create(name);
+    }
+
+    private Kitchen(KitchenId id, string name, string description, string rules, KitchenAccountId? kitchenAccountId, IEnumerable<Resident> residents)
+    {
+        Id = id;
+        Information = KitchenInformation.CreateWithDescriptionAndRules(name, description, rules);
+        KitchenAccountId = kitchenAccountId;
+        this.residents = residents.ToList();
     }
 
     public void OpenKitchenAccount(KitchenAccountId id)

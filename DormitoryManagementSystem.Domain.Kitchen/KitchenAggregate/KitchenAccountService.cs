@@ -33,7 +33,7 @@
 //        kitchenRepository.SaveOrUpdate(kitchen);
 //        kitchenAccountRepository.SaveOrUpdate(newKitchenAccount);
 
-//        // TODO: publish events 
+
 //    }
 
 //    public void GetKitchenAccount(KitchenAccountId id)

@@ -8,7 +8,6 @@ namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesB
 public class SharedExpensesBalancer : AggregateRoot
 {
     public SharedExpensesBalancerId Id { get; init; }
-    public Guid KitchenId { get; init; }
     public Currency Currency { get; private set; }
 
     private List<Participant> participants;
@@ -17,14 +16,12 @@ public class SharedExpensesBalancer : AggregateRoot
     private IMinimumTransactionDebtSettler debtSettler;
 
     public static SharedExpensesBalancer CreateNew(
-        Guid kitchenId,
         Currency currency,
         List<Participant> participants,
         IMinimumTransactionDebtSettler debtSettler)
     {
         return new SharedExpensesBalancer(
             SharedExpensesBalancerId.Next(),
-            kitchenId,
             currency,
             participants,
             debtSettler);
@@ -32,13 +29,11 @@ public class SharedExpensesBalancer : AggregateRoot
 
     private SharedExpensesBalancer(
         SharedExpensesBalancerId id,
-        Guid kitchenId,
         Currency currency,
         List<Participant> participants,
         IMinimumTransactionDebtSettler debtSettler)
     {
         Id = id;
-        KitchenId = kitchenId;
         Currency = currency;
         this.participants = participants;
         this.debtSettler = debtSettler;

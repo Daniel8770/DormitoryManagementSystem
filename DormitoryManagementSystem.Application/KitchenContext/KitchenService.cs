@@ -11,16 +11,18 @@ public class KitchenService
 {
     IKitchenRepository kitchenRepository;
     IKitchenBalanceRepository kitchenBalanceRepository;
+    DomainEventPublisher domainEventPublisher;
 
     public KitchenService(IKitchenRepository kitchenRepository, IKitchenBalanceRepository kitchenBalanceRepository, DomainEventPublisher domainEventPublisher)
     {
         this.kitchenRepository = kitchenRepository;
         this.kitchenBalanceRepository = kitchenBalanceRepository;
+        this.domainEventPublisher = domainEventPublisher;
     }
 
     public async Task<Kitchen> OpenNewKitchen(string name)
     {
-        Kitchen newKitchen = new Kitchen(KitchenId.Next(), name);
+        Kitchen newKitchen = Kitchen.CreateNew(name);
         await kitchenRepository.Save(newKitchen);
         return newKitchen;
     }
@@ -36,6 +38,8 @@ public class KitchenService
         KitchenBalance newKitchenBalance = kitchen.OpenKitchenBalanceWithAllResidents(name, currency);
 
         await kitchenBalanceRepository.Save(newKitchenBalance);
+
+        await domainEventPublisher.PublishAllEventsInEventStore();
 
         return newKitchenBalance;
     }

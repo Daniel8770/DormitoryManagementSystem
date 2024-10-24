@@ -1,4 +1,5 @@
-﻿using DormitoryManagementSystem.Domain.KitchenContext.IntegrationMessages;
+﻿using DormitoryManagementSystem.Domain.Common.MoneyModel;
+using DormitoryManagementSystem.Domain.KitchenContext.IntegrationMessages;
 using DormitoryManagementSystem.Domain.SharedExpensesContext.IntegrationMessages;
 using DormitoryManagementSystem.Domain.SharedExpensesContext.MinimumTransactionDebtSettlementAlgorithm;
 using DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
@@ -22,12 +23,11 @@ public class CreateSharedExpenseBalancerMessageHandler :
     public async Task Handle(CreateSharedExpenseBalancerMessage message)
     {
         SharedExpensesBalancer newBalancer = SharedExpensesBalancer.CreateNew(
-            message.KitchenId,
-            message.Currency,
+            Enum.Parse<Currency>(message.Currency),
             message.Participants.ToList(),
             new RandomMinimumTransactionsDebtSettler());
 
         await sharedExpensesBalancerRepository.Save(newBalancer);
-        await bus.Send(new SharedExpenseBalancerCreatedMessage(newBalancer.Id.Value, newBalancer.KitchenId));
+        await bus.Send(new SharedExpenseBalancerCreatedMessage(newBalancer.Id.Value, message.KitchenBalanceId));
     }
 }

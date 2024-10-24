@@ -10,9 +10,8 @@ public static class ApplicationConfiguration
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AutoRegisterHandlersFromAssemblyOf<KitchenAccountCreatedEventHandler>();
-        services.AutoRegisterHandlersFromAssemblyOf<CreateSharedExpenseBalancerMessageHandler>();
         services.AddScoped<KitchenService>();
+        services.AutoRegisterHandlersFromAssemblyOf<KitchenAccountCreatedEventHandler>();
         return services;
     }
 }

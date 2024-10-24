@@ -29,7 +29,12 @@ public class KitchensController : Controller
     public async Task<IActionResult> OpenNewKitchen(OpenNewKitchenRequest request)
     {
         Kitchen newKitchen = await kitchenService.OpenNewKitchen(request.Name);
-        string uri = linkGenerator.GetUriByName(HttpContext, "open-new-kitchen-balance", new { kitchenId = newKitchen.Id.Value }) ?? throw new Exception();
+        
+        string uri = linkGenerator.GetUriByName(
+            HttpContext,
+            "open-new-kitchen-balance",
+            new { kitchenId = newKitchen.Id.Value }) ?? throw new Exception();
+        
         return Ok(new OpenNewKitchenResponse(
             newKitchen.Id.Value,
             newKitchen.Information.Name,

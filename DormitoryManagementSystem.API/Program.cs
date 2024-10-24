@@ -37,7 +37,7 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseAuthorization();
-        app.UseDomainEventsPublisher();
+        //app.UseDomainEventsPublisher();
 
         app.MapControllers();
 
