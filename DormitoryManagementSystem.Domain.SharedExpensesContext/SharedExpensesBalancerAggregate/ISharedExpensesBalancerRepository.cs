@@ -4,8 +4,8 @@ namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesB
 public interface ISharedExpensesBalancerRepository
 {
 
-    Task<SharedExpensesBalancer?> GetById(SharedExpensesBalancerId id);
-    Task Update(SharedExpensesBalancer sharedExpensesBalancer);
-    Task Save(SharedExpensesBalancer sharedExpensesBalancer);
+    Task<SharedExpensesGroup?> GetById(SharedExpensesGroupId id);
+    Task Update(SharedExpensesGroup sharedExpensesBalancer);
+    Task Save(SharedExpensesGroup sharedExpensesBalancer);
 
 }

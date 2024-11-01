@@ -22,7 +22,7 @@ public class CreateSharedExpenseBalancerMessageHandler :
 
     public async Task Handle(CreateSharedExpenseBalancerMessage message)
     {
-        SharedExpensesBalancer newBalancer = SharedExpensesBalancer.CreateNew(
+        SharedExpensesGroup newBalancer = SharedExpensesGroup.CreateNew(
             Enum.Parse<Currency>(message.Currency),
             message.Participants.ToList(),
             new RandomMinimumTransactionsDebtSettler());

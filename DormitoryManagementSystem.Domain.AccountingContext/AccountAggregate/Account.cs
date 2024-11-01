@@ -16,7 +16,7 @@ public class Account : AggregateRoot
     public ImmutableList<Entry> Entries { get => entries.Entries; }
 
     private EntryList entries;
-    private decimal? disposableAmountLowerLimit;
+    public decimal? disposableAmountLowerLimit;
 
     public Account(AccountId id, BankInformation bankInformation, Administrator administrator) 
         : this(id, bankInformation, administrator, EntryList.NewEmpty()) { }

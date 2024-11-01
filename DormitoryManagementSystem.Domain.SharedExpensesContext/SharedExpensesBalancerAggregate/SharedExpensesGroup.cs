@@ -5,9 +5,9 @@ using DormitoryManagementSystem.Domain.SharedExpensesContext.MinimumTransactionD
 
 namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
 
-public class SharedExpensesBalancer : AggregateRoot
+public class SharedExpensesGroup : AggregateRoot
 {
-    public SharedExpensesBalancerId Id { get; init; }
+    public SharedExpensesGroupId Id { get; init; }
     public Currency Currency { get; private set; }
 
     private List<Participant> participants;
@@ -15,20 +15,20 @@ public class SharedExpensesBalancer : AggregateRoot
     private List<Debt> debts = new();
     private IMinimumTransactionDebtSettler debtSettler;
 
-    public static SharedExpensesBalancer CreateNew(
+    public static SharedExpensesGroup CreateNew(
         Currency currency,
         List<Participant> participants,
         IMinimumTransactionDebtSettler debtSettler)
     {
-        return new SharedExpensesBalancer(
-            SharedExpensesBalancerId.Next(),
+        return new SharedExpensesGroup(
+            SharedExpensesGroupId.Next(),
             currency,
             participants,
             debtSettler);
     }
 
-    private SharedExpensesBalancer(
-        SharedExpensesBalancerId id,
+    private SharedExpensesGroup(
+        SharedExpensesGroupId id,
         Currency currency,
         List<Participant> participants,
         IMinimumTransactionDebtSettler debtSettler)

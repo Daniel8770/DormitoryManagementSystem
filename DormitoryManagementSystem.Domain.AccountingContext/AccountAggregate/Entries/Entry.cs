@@ -11,6 +11,8 @@ namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.En
 public abstract class Entry : Entity
 {
     public Money Amount { get; init; }
+
+    // TODO: This is bad since the object will get a new data when constructed through EF - retreieved from persistence.
     public DateTime RegistrationDate { get; init; } = DateTime.Now;
 
     protected Entry(Money amount)

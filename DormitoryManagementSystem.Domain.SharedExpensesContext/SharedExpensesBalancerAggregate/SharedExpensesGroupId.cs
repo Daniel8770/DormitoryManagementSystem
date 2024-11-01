@@ -1,12 +1,12 @@
 ﻿namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
 
-public class SharedExpensesBalancerId
+public class SharedExpensesGroupId
 {
     public Guid Value { get; init; }
 
-    public static SharedExpensesBalancerId Next() => new(Guid.NewGuid());
+    public static SharedExpensesGroupId Next() => new(Guid.NewGuid());
 
-    public SharedExpensesBalancerId(Guid value)
+    public SharedExpensesGroupId(Guid value)
     {
         Value = value;
     }

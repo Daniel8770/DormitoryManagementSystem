@@ -7,15 +7,15 @@ namespace DormitoryManagementSystem.Infrastructure.SharedExpensesContext;
 
 public class InMemorySharedExpensesBalancerRepository : ISharedExpensesBalancerRepository
 {
-    private List<SharedExpensesBalancer> sharedExpensesBalancers = new();
+    private List<SharedExpensesGroup> sharedExpensesBalancers = new();
 
-    public async Task<SharedExpensesBalancer?> GetById(SharedExpensesBalancerId id)
+    public async Task<SharedExpensesGroup?> GetById(SharedExpensesGroupId id)
     {
-        SharedExpensesBalancer? result = sharedExpensesBalancers.Find(s => s.Id == id);
+        SharedExpensesGroup? result = sharedExpensesBalancers.Find(s => s.Id == id);
         return await Task.FromResult(result);
     }
 
-    public async Task Save(SharedExpensesBalancer sharedExpenseBalancer)
+    public async Task Save(SharedExpensesGroup sharedExpenseBalancer)
     {
         if (await GetById(sharedExpenseBalancer.Id) is not null)
             throw new InfrastructureException($"Kitchen balance {sharedExpenseBalancer.Id} already exists.");
@@ -25,9 +25,9 @@ public class InMemorySharedExpensesBalancerRepository : ISharedExpensesBalancerR
         await Task.CompletedTask;
     }
 
-    public async Task Update(SharedExpensesBalancer sharedExpenseBalancer)
+    public async Task Update(SharedExpensesGroup sharedExpenseBalancer)
     {
-        SharedExpensesBalancer existing = await GetById(sharedExpenseBalancer.Id) ??
+        SharedExpensesGroup existing = await GetById(sharedExpenseBalancer.Id) ??
             throw new InfrastructureException($"Kitchen balance {sharedExpenseBalancer.Id} doesn't exist.");
 
         sharedExpensesBalancers.Remove(existing);
