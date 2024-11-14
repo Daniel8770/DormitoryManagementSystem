@@ -35,10 +35,29 @@ public class BookableResource : AggregateRoot<Guid>
     public static BookableResource CreateNew(string name, string rules, DateTime openDate, DateTime endDate) =>
         new BookableResource(BookableResourceId.Next(), name, openDate, endDate, new Rules(rules), new(), new());
 
-    public static BookableResource CreateNewWithMaximumBookingsPerMember(string name, string rules, int maxBookingsPerMember, DateTime openDate, DateTime endDate) =>
-       new BookableResource(BookableResourceId.Next(), name, openDate, endDate, new MaxBookingsPerMemberRules(rules, maxBookingsPerMember), new(), new());
+    public static BookableResource CreateNewWithMaximumBookingsPerMember(
+        string name,
+        string rules,
+        int maxBookingsPerMember,
+        DateTime openDate,
+        DateTime endDate) =>
+            new BookableResource(
+                BookableResourceId.Next(),
+                name,
+                openDate,
+                endDate,
+                new MaxBookingsPerMemberRules(rules, maxBookingsPerMember),
+                new(),
+                new());
 
-    private BookableResource(BookableResourceId id, string name, DateTime openDate, DateTime endDate, Rules rules, List<Unit> units, List<Booking> bookings) 
+    private BookableResource(
+        BookableResourceId id,
+        string name,
+        DateTime openDate,
+        DateTime endDate,
+        Rules rules,
+        List<Unit> units,
+        List<Booking> bookings) 
         : base(id.Value)
     {
         Name = new Name(name);
@@ -73,23 +92,19 @@ public class BookableResource : AggregateRoot<Guid>
 
     private void Book(Booking newBooking)
     {
-        bool resourceContainsUnit = units.Find(unit => unit.Id == newBooking.UnitId.Value) is null ? false : true;
+        if (!ResourceContainsUnit(newBooking.UnitId))
+            throw new DomainException($"Cannot book unit {newBooking.UnitId} for member " +
+                $"{newBooking.MemberId} because the unit is not part of the bookable resource.");
 
-        if (!resourceContainsUnit)
-            throw new DomainException($"Cannot book unit {newBooking.UnitId} for member {newBooking.MemberId} because the unit is not part of the bookable resource.");
+        if (UnitAlreadyBooked(newBooking.UnitId, newBooking.TimePeriod))
+            throw new DomainException($"Cannot book unit {newBooking.UnitId} for member " +
+                $"{newBooking.MemberId} because there is another booking in the same time period.");
 
-        Booking? sameBooking = bookings.Find(booking => booking.UnitId.Value == newBooking.UnitId.Value && newBooking.TimePeriod.Overlaps(booking.TimePeriod));
-
-        if (sameBooking is not null)
-            throw new DomainException($"Cannot book unit {newBooking.UnitId} for member {newBooking.MemberId} because there is another booking in the same time period.");
-
-        if (Rules is MaxBookingsPerMemberRules rules)
-        {
-            IEnumerable<Booking> membersOtherBookings = bookings.Where(booking => booking.MemberId == newBooking.MemberId && !booking.IsExpired());
-            if (membersOtherBookings.Count() >= rules.MaxBookingsPerMember)
-                throw new DomainException($"Cannot book unit {newBooking.UnitId} for member {newBooking.MemberId} because the member has reached the maximum number of bookings of {rules.MaxBookingsPerMember}.");
-        }
-
+        if (MaxBookingsForMemberReached(newBooking.MemberId))
+            throw new DomainException($"Cannot book unit {newBooking.UnitId} for member " +
+                $"{newBooking.MemberId} because the member has reached the maximum number of bookings of " +
+                $"{((MaxBookingsPerMemberRules)Rules).MaxBookingsPerMember}.");
+        
         bookings.Add(newBooking);
     }
     
@@ -118,4 +133,31 @@ public class BookableResource : AggregateRoot<Guid>
         DateTime now = DateTime.Now;
         return OpenDate <= now &&  now < EndDate;
     }
+
+    private bool ResourceContainsUnit(UnitId unitId) =>
+        units.Find(unit => unit.Id == unitId.Value) is null ? false : true;
+
+    private bool UnitAlreadyBooked(UnitId unitId, TimePeriod timePeriod) => 
+        bookings.Find(booking =>
+            booking.UnitId.Value == unitId.Value
+            && timePeriod.Overlaps(booking.TimePeriod))
+        is null ? false : true;
+
+    private bool MaxBookingsForMemberReached(Guid memberId)
+    {
+        if (Rules is MaxBookingsPerMemberRules rules)
+        {
+            IEnumerable<Booking> membersOtherBookings = GetNonExpiredBookingsOfMember(memberId);
+            return membersOtherBookings.Count() >= rules.MaxBookingsPerMember;
+        }
+
+        return false;
+    }
+
+    public IEnumerable<Booking> GetNonExpiredBookingsOfMember(Guid memberId) =>
+        GetAllBookingsOfMember(memberId).Where(booking => !booking.IsExpired());
+
+    public IEnumerable<Booking> GetAllBookingsOfMember(Guid memberId) =>
+        bookings.Where(booking => booking.MemberId == memberId);
+    
 }
