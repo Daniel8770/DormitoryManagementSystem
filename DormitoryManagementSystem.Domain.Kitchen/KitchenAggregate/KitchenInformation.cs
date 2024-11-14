@@ -2,7 +2,7 @@
 
 namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
 
-public class KitchenInformation : ValueObject
+public class KitchenInformation
 {
     public string Name { get; init; }
     public string? Description { get; init; }

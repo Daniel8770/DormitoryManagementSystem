@@ -10,7 +10,7 @@ using System.Collections.Immutable;
 
 namespace DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenBalanceAggregate;
 
-public class KitchenBalance : AggregateRoot
+public class KitchenBalance
 {
     public KitchenBalanceId Id { get; init; }
     public KitchenBalanceInformation Information { get; private set; }

@@ -2,7 +2,7 @@
 
 namespace DormitoryManagementSystem.Domain.Common.MoneyModel;
 
-public class Money : ValueObject
+public class Money
 {
     public decimal Value { get; init; }
 

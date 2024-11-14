@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DormitoryManagementSystem.Domain.KitchenContext.Economy;
-public abstract class Expense : Entity
+public abstract class Expense 
 {
     public ExpenseId Id { get; init; }
     public string Title { get; private set; }

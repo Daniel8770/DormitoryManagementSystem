@@ -3,7 +3,7 @@
 
 
 namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
-public class Participant : Entity
+public class Participant 
 {
     public Guid Id { get; init; }
 

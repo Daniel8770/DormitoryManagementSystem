@@ -2,6 +2,9 @@
 
 namespace DormitoryManagementSystem.Domain.Common.Aggregates;
 
-public abstract class AggregateRoot : Entity
+public abstract class AggregateRoot<TIdentity> : Entity<TIdentity> where TIdentity : notnull
 {
+    public AggregateRoot(TIdentity id) : base(id)
+    {
+    }
 }

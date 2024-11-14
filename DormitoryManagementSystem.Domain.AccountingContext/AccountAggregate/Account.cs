@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 
 namespace DormitoryManagementSystem.Domain.Common.Accounting;
 
-public class Account : AggregateRoot
+public class Account 
 {
     public AccountId Id { get; init; }
     public BankInformation BankInformation { get; private set; }

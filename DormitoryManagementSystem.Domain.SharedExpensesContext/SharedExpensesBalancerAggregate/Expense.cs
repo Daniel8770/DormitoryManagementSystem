@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
-public class Expense : Entity
+public class Expense 
 {
     public Guid Id { get; init; }
     public Money Amount { get; private set; }

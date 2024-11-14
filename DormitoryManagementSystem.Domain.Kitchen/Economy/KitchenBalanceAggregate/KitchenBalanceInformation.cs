@@ -3,7 +3,7 @@ using DormitoryManagementSystem.Domain.Common.ValueObjects;
 
 namespace DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenBalanceAggregate;
 
-public class KitchenBalanceInformation : ValueObject
+public class KitchenBalanceInformation
 {
     public string Name { get; private set; }
     public string? Description { get; private set; } 

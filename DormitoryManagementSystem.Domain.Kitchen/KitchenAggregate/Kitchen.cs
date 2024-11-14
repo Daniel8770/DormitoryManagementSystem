@@ -9,7 +9,7 @@ using System.Collections.Immutable;
 
 namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
 
-public class Kitchen : AggregateRoot
+public class Kitchen
 {
     public KitchenId Id { get; init; }
     public KitchenInformation Information { get; private set; }

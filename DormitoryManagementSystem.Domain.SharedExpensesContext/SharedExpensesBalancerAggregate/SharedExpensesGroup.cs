@@ -5,7 +5,7 @@ using DormitoryManagementSystem.Domain.SharedExpensesContext.MinimumTransactionD
 
 namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
 
-public class SharedExpensesGroup : AggregateRoot
+public class SharedExpensesGroup
 {
     public SharedExpensesGroupId Id { get; init; }
     public Currency Currency { get; private set; }

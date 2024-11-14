@@ -2,7 +2,7 @@
 
 namespace DormitoryManagementSystem.Domain.Common.Accounting;
 
-public class BankInformation : ValueObject
+public record BankInformation : ValueObject
 {
 
 }

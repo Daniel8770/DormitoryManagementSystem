@@ -2,7 +2,7 @@
 
 namespace DormitoryManagementSystem.Domain.NotificationContext;
 
-public class Notification : Entity
+public class Notification 
 {
     public NotificationId Id { get; init; }
     public string Message { get; init; }
