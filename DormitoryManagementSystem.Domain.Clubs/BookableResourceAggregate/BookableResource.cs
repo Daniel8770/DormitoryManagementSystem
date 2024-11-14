@@ -68,6 +68,18 @@ public class BookableResource : AggregateRoot<Guid>
         this.bookings = bookings;
     }
 
+    public IEnumerable<Booking> GetNonExpiredBookingsOfMember(Guid memberId) =>
+        GetAllBookingsOfMember(memberId).Where(booking => !booking.IsExpired());
+
+    public IEnumerable<Booking> GetAllBookingsOfMember(Guid memberId) =>
+        bookings.Where(booking => booking.MemberId == memberId);
+
+    public IEnumerable<Booking> GetNonExpiredBookings() =>
+        bookings.Where(booking => !booking.IsExpired());
+
+    public IEnumerable<Unit> GetBookableUnits() => 
+        units.Where(unit => !(GetNonExpiredBookings().Any(booking => booking.UnitId.Value == unit.Id)));
+
     public void BookDays(Guid memberId, UnitId unitId, DateTime date, int days)
     {
         Booking newBooking = CreateNewBooking(memberId, unitId, date, new DaysTimePeriod(date, days));
@@ -108,7 +120,8 @@ public class BookableResource : AggregateRoot<Guid>
         bookings.Add(newBooking);
     }
     
-    private int GetNextBookingId() => bookings.Any() ? bookings.Max(booking => booking.Id) + 1 : 1;
+    private int GetNextBookingId() => 
+        bookings.Any() ? bookings.Max(booking => booking.Id) + 1 : 1;
 
     public void ChangeName(string name)
     {
@@ -121,12 +134,11 @@ public class BookableResource : AggregateRoot<Guid>
         units.Add(new Unit(new UnitId(newId), name));
     }
 
-    private int GetNextUnitId() => units.Any() ? units.Max(unit => unit.Id) + 1 : 1;    
+    private int GetNextUnitId() => 
+        units.Any() ? units.Max(unit => unit.Id) + 1 : 1;
 
-    public void RemoveUnit(UnitId unitId)
-    {
+    public void RemoveUnit(UnitId unitId) => 
         units.RemoveAll(unit => unit.Id == unitId.Value);
-    }
 
     public bool IsAvailable()
     {
@@ -153,11 +165,4 @@ public class BookableResource : AggregateRoot<Guid>
 
         return false;
     }
-
-    public IEnumerable<Booking> GetNonExpiredBookingsOfMember(Guid memberId) =>
-        GetAllBookingsOfMember(memberId).Where(booking => !booking.IsExpired());
-
-    public IEnumerable<Booking> GetAllBookingsOfMember(Guid memberId) =>
-        bookings.Where(booking => booking.MemberId == memberId);
-    
 }

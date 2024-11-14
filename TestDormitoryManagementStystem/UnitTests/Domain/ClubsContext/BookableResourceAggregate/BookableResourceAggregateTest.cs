@@ -257,4 +257,39 @@ public class BookableResourceAggregateTest
 
         Assert.Throws<DomainException>(() => bookableResource.BookHours(memberId, unitId, date.AddHours(10), nHours));
     }
+
+    [Fact]
+    public void GetBookableUnits()
+    {
+        bookableResource.AddUnit("Unit 1");
+        bookableResource.AddUnit("Unit 2");
+        bookableResource.AddUnit("Unit 3");
+        bookableResource.AddUnit("Unit 4");
+        bookableResource.AddUnit("Unit 5");
+
+        Guid memberId1 = Guid.NewGuid();
+        Guid memberId2 = Guid.NewGuid();
+        Guid memberId3 = Guid.NewGuid();
+        DateTime date = DateTime.Now;
+        int nHours = 2;
+
+        bookableResource.BookHours(memberId1, new(1), date, nHours);
+        bookableResource.BookHours(memberId2, new(2), date, nHours);
+        bookableResource.BookHours(memberId3, new(3), date, nHours);
+
+        IEnumerable<Unit> bookableUnits = bookableResource.GetBookableUnits();
+
+        Assert.Equal(2, bookableUnits.Count());
+        Assert.Collection(bookableUnits,
+            unit =>
+            {
+                Assert.Equal("Unit 4", unit.Name.Value);
+            },
+            unit =>
+            {
+                Assert.Equal("Unit 5", unit.Name.Value);
+            }
+        );
+    }
+    
 }
