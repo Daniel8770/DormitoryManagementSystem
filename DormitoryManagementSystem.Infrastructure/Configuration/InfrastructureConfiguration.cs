@@ -17,6 +17,8 @@ using DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalan
 using DormitoryManagementSystem.Infrastructure.SharedExpensesContext;
 using DormitoryManagementSystem.Domain.AccountingContext.DomainEvents;
 using DormitoryManagementSystem.Domain.SharedExpensesContext.IntegrationMessages;
+using DormitoryManagementSystem.Infrastructure.ClubsContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace DormitoryManagementSystem.Infrastructure.Configuration;
 public static class InfrastructureConfiguration
@@ -29,7 +31,8 @@ public static class InfrastructureConfiguration
         services.Configure<RebusOptions>(infraStructureConfig.GetRequiredSection(RebusOptions.SectionName));
         services.ConfigureRebus(GetOptions<RebusOptions>(infraStructureConfig, RebusOptions.SectionName));
 
-        services.ConfigureEntityFramework();
+        services.ConfigureEntityFramework(infraStructureConfig.GetConnectionString("Default") 
+            ?? throw new Exception("Could not load default connectionstring from appsettigns."));
 
         services.AddInMemoryRepositories();
 
@@ -64,8 +67,11 @@ public static class InfrastructureConfiguration
         return services;
     }
 
-    public static IServiceCollection ConfigureEntityFramework(this IServiceCollection services)
+    public static IServiceCollection ConfigureEntityFramework(this IServiceCollection services, string connectionstring)
     {
+        services.AddDbContext<ClubsDBContext>(options =>
+            options.UseSqlServer(connectionstring)
+        );
         return services;
     }
 
