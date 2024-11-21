@@ -2,29 +2,22 @@
 
 namespace DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 
-public class BookingId
-{
-    public int Value { get; init; }
-    public BookingId(int value)
-    {
-        Value = value;
-    }
-}
+public record BookingId(int Value) : EntityId<int>(Value);
 
-public class Booking : Entity<int>
+public class Booking : Entity<BookingId>
 {
     public DateTime DateBooked { get; private set; }
     public TimePeriod TimePeriod { get; private set; }
-    public Guid MemberId { get; private set; }
+    public MemberId MemberId { get; private set; }
     public UnitId UnitId { get; private set; }
 
-    public Booking(BookingId id, DateTime dateBooked, TimePeriod timePeriod, Guid member, UnitId unit) : base(id.Value)
+    public Booking(BookingId id, DateTime dateBooked, TimePeriod timePeriod, MemberId member, UnitId unit) : base(id)
     {
         DateBooked = dateBooked;
-        TimePeriod =  timePeriod;
+        TimePeriod = timePeriod;
         MemberId = member;
         UnitId = unit;
     }
 
-    public bool IsExpired() => DateTime.Now > TimePeriod.EndDate;  
+    public bool IsExpired() => DateTime.Now > TimePeriod.EndDate;
 }

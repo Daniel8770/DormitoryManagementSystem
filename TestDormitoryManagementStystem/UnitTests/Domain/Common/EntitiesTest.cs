@@ -1,5 +1,6 @@
 ﻿
 
+using DormitoryManagementSystem.Domain.ClubsContext;
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 
 namespace TestDormitoryManagementStystem.UnitTests.Domain.Common;
@@ -8,16 +9,17 @@ public class EntitiesTest
     [Fact]
     public void Entities_ShouldBeComparableByIdentity()
     {
-        UnitId id = new(1);
+        MemberId id = MemberId.Next();
 
-        Unit unit1 = new (id, "Unit 1");
-        Unit unit2 = new(id, "Unit 2");
-        Unit unit3 = new(new(2), "Unit 3");
+        Member unit1 = new (id);
+        Member unit2 = new (id);
+        Member unit3 = new (MemberId.Next());
 
         Assert.True(unit1 == unit2);
         Assert.True(unit1.Equals(unit2));
         Assert.False(unit1 == unit3);
         Assert.False(unit1.Equals(unit3));
+        Assert.True(unit1 != unit3);
     }
 
 

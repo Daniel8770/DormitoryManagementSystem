@@ -1,4 +1,5 @@
-﻿using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
+﻿using DormitoryManagementSystem.Domain.ClubsContext;
+using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 
 namespace DormitoryManagementSystem.Application.Clubs;
 public class BookableResourceService
@@ -35,7 +36,7 @@ public class BookableResourceService
         return resource;
     }
 
-    public async Task<BookableResource?> BookDays(BookableResourceId id, Guid memberId, UnitId unitId, DateTime date, int days)
+    public async Task<BookableResource?> BookDays(BookableResourceId id, MemberId memberId, UnitId unitId, DateTime date, int days)
     {
         // TODO: should check if the member is allowed to book the resource
 

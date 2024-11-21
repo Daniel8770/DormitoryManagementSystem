@@ -20,6 +20,7 @@ using DormitoryManagementSystem.Domain.SharedExpensesContext.IntegrationMessages
 using DormitoryManagementSystem.Infrastructure.ClubsContext;
 using Microsoft.EntityFrameworkCore;
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
+using DormitoryManagementSystem.Infrastructure.ClubsContext.EFCore;
 
 namespace DormitoryManagementSystem.Infrastructure.Configuration;
 public static class InfrastructureConfiguration

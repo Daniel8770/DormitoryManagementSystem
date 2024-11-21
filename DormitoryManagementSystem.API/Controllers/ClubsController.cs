@@ -55,7 +55,7 @@ public class ClubsController : Controller
     {
         BookableResource? updatedResource = await bookableResourceService.BookDays(
             new BookableResourceId(bookableResourceId),
-            request.MemberId,
+            new (request.MemberId),
             new (request.UnitId),
             request.Date,
             request.Days);

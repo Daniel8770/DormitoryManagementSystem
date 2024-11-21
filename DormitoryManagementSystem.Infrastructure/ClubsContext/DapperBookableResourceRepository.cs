@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DormitoryManagementSystem.Domain.Clubs.BookableResourceAggregate;
+using DormitoryManagementSystem.Domain.ClubsContext;
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 using Microsoft.Data.SqlClient;
 
@@ -40,9 +41,9 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
             bookableResource.Name,
             bookableResource.OpenDate,
             bookableResource.EndDate,
-            bookableResource.MaxBookingsPerMember is not null
-                ? new MaxBookingsPerMemberRules(bookableResource.Rules, bookableResource.MaxBookingsPerMember)
-                : new Rules(bookableResource.Information),
+            bookableResource.MaxBookingsPerMember is null
+                ? new Rules(bookableResource.Rules)
+                : new MaxBookingsPerMemberRules(bookableResource.Rules, bookableResource.MaxBookingsPerMember),
             units.Select(u => new Unit(new UnitId(u.Id), u.Name)).ToList(),
             bookings.Select(b => new Booking(
                 new BookingId(b.Id),
@@ -50,7 +51,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                 (TimePeriod)(b.Days is not null
                     ? new DaysTimePeriod(b.StartDate, b.Days)
                     : new HoursTimePeriod(b.StartDate, b.Hours)),
-                b.MemberId,
+                new MemberId(b.MemberId),
                 new UnitId(b.UnitId)
             )).ToList());
     }
@@ -78,7 +79,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
         {
             await connection.ExecuteAsync(insertBookableResource, transaction: transaction, param: new
             {
-                Id = bookableResource.Id,
+                Id = bookableResource.Id.Value,
                 Name = bookableResource.Name.Value,
                 OpenDate = bookableResource.OpenDate,
                 EndDate = bookableResource.EndDate,
@@ -89,19 +90,19 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
             await Task.WhenAll(bookableResource.Units.Select(unit =>
                 connection.ExecuteAsync(insertUnit, transaction: transaction, param: new
                 {
-                    Id = unit.Id,
+                    Id = unit.Id.Value,
                     Name = unit.Name,
-                    BookableResourceId = bookableResource.Id
+                    BookableResourceId = bookableResource.Id.Value
                 })
             ));
 
             await Task.WhenAll(bookableResource.Bookings.Select(booking =>
                 connection.ExecuteAsync(insertBooking, transaction: transaction, param: new
                 {
-                    Id = booking.Id,
-                    MemberId = booking.MemberId,
-                    BookableResourceId = bookableResource.Id,
-                    UnitId = booking.UnitId,
+                    Id = booking.Id.Value,
+                    MemberId = booking.MemberId.Value,
+                    BookableResourceId = bookableResource.Id.Value,
+                    UnitId = booking.UnitId.Value,
                     StartDate = booking.TimePeriod.StartDate,
                     EndDate = booking.TimePeriod.EndDate,
                     DateBooked = booking.DateBooked
@@ -160,7 +161,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
         {
             await connection.ExecuteAsync(updateBookableResource, transaction: transaction, param: new
             {
-                Id = bookableResource.Id,
+                Id = bookableResource.Id.Value,
                 Name = bookableResource.Name.Value,
                 OpenDate = bookableResource.OpenDate,
                 EndDate = bookableResource.EndDate,
@@ -171,18 +172,18 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
             await Task.WhenAll(bookableResource.Units.Select(unit =>
                 connection.ExecuteAsync(updateUnit, transaction: transaction, param: new
                 {
-                    Id = unit.Id,
+                    Id = unit.Id.Value,
                     Name = unit.Name.Value,
-                    BookableResourceId = bookableResource.Id
+                    BookableResourceId = bookableResource.Id.Value
                 })
             ));
 
             await Task.WhenAll(bookableResource.Bookings.Select(booking =>
                 connection.ExecuteAsync(updateBooking, transaction: transaction, param: new
                 {
-                    Id = booking.Id,
-                    MemberId = booking.MemberId,
-                    BookableResourceId = bookableResource.Id,
+                    Id = booking.Id.Value,
+                    MemberId = booking.MemberId.Value,
+                    BookableResourceId = bookableResource.Id.Value,
                     UnitId = booking.UnitId.Value,
                     StartDate = booking.TimePeriod.StartDate,
                     EndDate = booking.TimePeriod.EndDate,

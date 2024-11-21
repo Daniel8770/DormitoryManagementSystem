@@ -1,4 +1,5 @@
 ﻿using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
+using DormitoryManagementSystem.Infrastructure.ClubsContext.EFCore;
 
 namespace DormitoryManagementSystem.Infrastructure.ClubsContext;
 

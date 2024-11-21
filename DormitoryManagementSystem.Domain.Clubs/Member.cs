@@ -1,14 +1,16 @@
 ﻿using DormitoryManagementSystem.Domain.Common.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DormitoryManagementSystem.Domain.ClubsContext;
-public class Member : Entity<Guid>
+
+public record MemberId(Guid Value) : EntityId<Guid>(Value)
 {
-    public Member(Guid id) : base(id)
+    public static MemberId Next() => new(Guid.NewGuid());
+}
+
+public class Member : Entity<MemberId>
+{
+    public Member(MemberId id) : base(id)
     {
     }
 }

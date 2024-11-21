@@ -16,6 +16,8 @@ public class ValueObjectsTest
         MaxBookingsPerMemberRules rules3 = new("Information", 4);
         Assert.True(rules1 == rules2);
         Assert.False(rules1 == rules3);
+        Assert.True(rules1.Equals(rules2));
+        Assert.False(rules1.Equals(rules3));
     }
 
     [Fact]

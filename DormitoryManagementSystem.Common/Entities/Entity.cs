@@ -1,9 +1,12 @@
-﻿
+﻿namespace DormitoryManagementSystem.Domain.Common.Entities;
 
-namespace DormitoryManagementSystem.Domain.Common.Entities;
+public abstract record EntityId;
+
+public abstract record EntityId<TIdentity>(TIdentity Value) : EntityId 
+    where TIdentity : notnull;
 
 
-public abstract class Entity<TIdentity> where TIdentity : notnull
+public abstract class Entity<TIdentity> where TIdentity : EntityId
 {
     public TIdentity Id { get; init; }
 

@@ -1,5 +1,6 @@
 ﻿using DormitoryManagementSystem.Domain.Clubs.BookableResourceAggregate;
 using DormitoryManagementSystem.Domain.Common.Aggregates;
+using DormitoryManagementSystem.Domain.Common.Entities;
 using DormitoryManagementSystem.Domain.Common.Exceptions;
 using System;
 using System.Collections.Generic;
@@ -10,17 +11,12 @@ using System.Threading.Tasks;
 
 namespace DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 
-public class BookableResourceId
+public record BookableResourceId(Guid Value) : EntityId<Guid>(Value)
 {
-    public Guid Value { get; init; }
     public static BookableResourceId Next() => new BookableResourceId(Guid.NewGuid());
-    public BookableResourceId(Guid value)
-    {
-        Value = value;
-    }
 }
 
-public class BookableResource : AggregateRoot<Guid>
+public class BookableResource : AggregateRoot<BookableResourceId>
 {
     public Name Name { get; private set; }
     public DateTime OpenDate { get; private set; }
@@ -57,8 +53,8 @@ public class BookableResource : AggregateRoot<Guid>
         DateTime endDate,
         Rules rules,
         List<Unit> units,
-        List<Booking> bookings) 
-        : base(id.Value)
+        List<Booking> bookings)
+        : base(id)
     {
         Name = new Name(name);
         OpenDate = openDate;
@@ -68,34 +64,34 @@ public class BookableResource : AggregateRoot<Guid>
         this.bookings = bookings;
     }
 
-    public IEnumerable<Booking> GetNonExpiredBookingsOfMember(Guid memberId) =>
+    public IEnumerable<Booking> GetNonExpiredBookingsOfMember(MemberId memberId) =>
         GetAllBookingsOfMember(memberId).Where(booking => !booking.IsExpired());
 
-    public IEnumerable<Booking> GetAllBookingsOfMember(Guid memberId) =>
+    public IEnumerable<Booking> GetAllBookingsOfMember(MemberId memberId) =>
         bookings.Where(booking => booking.MemberId == memberId);
 
     public IEnumerable<Booking> GetNonExpiredBookings() =>
         bookings.Where(booking => !booking.IsExpired());
 
-    public IEnumerable<Unit> GetBookableUnits() => 
-        units.Where(unit => !(GetNonExpiredBookings().Any(booking => booking.UnitId.Value == unit.Id)));
+    public IEnumerable<Unit> GetBookableUnits() =>
+        units.Where(unit => !(GetNonExpiredBookings().Any(booking => booking.UnitId == unit.Id)));
 
-    public void BookDays(Guid memberId, UnitId unitId, DateTime date, int days)
+    public void BookDays(MemberId memberId, UnitId unitId, DateTime date, int days)
     {
         Booking newBooking = CreateNewBooking(memberId, unitId, date, new DaysTimePeriod(date, days));
         Book(newBooking);
     }
 
-    public void BookHours(Guid memberId, UnitId unitId, DateTime date, int hours)
+    public void BookHours(MemberId memberId, UnitId unitId, DateTime date, int hours)
     {
         Booking newBooking = CreateNewBooking(memberId, unitId, date, new HoursTimePeriod(date, hours));
         Book(newBooking);
     }
 
-    private Booking CreateNewBooking(Guid memberId, UnitId unitId, DateTime date, TimePeriod timePeriod) 
+    private Booking CreateNewBooking(MemberId memberId, UnitId unitId, DateTime date, TimePeriod timePeriod)
     {
         return new Booking(
-            new(GetNextBookingId()),
+            GetNextBookingId(),
             DateTime.Now,
             timePeriod,
             memberId,
@@ -116,12 +112,12 @@ public class BookableResource : AggregateRoot<Guid>
             throw new DomainException($"Cannot book unit {newBooking.UnitId} for member " +
                 $"{newBooking.MemberId} because the member has reached the maximum number of bookings of " +
                 $"{((MaxBookingsPerMemberRules)Rules).MaxBookingsPerMember}.");
-        
+
         bookings.Add(newBooking);
     }
-    
-    private int GetNextBookingId() => 
-        bookings.Any() ? bookings.Max(booking => booking.Id) + 1 : 1;
+
+    private BookingId GetNextBookingId() =>
+        bookings.Any() ? new (bookings.Max(booking => booking.Id.Value) + 1) : new (1);
 
     public void ChangeName(string name)
     {
@@ -130,32 +126,32 @@ public class BookableResource : AggregateRoot<Guid>
 
     public void AddUnit(string name)
     {
-        int newId = GetNextUnitId();
-        units.Add(new Unit(new UnitId(newId), name));
+        UnitId newId = GetNextUnitId();
+        units.Add(new Unit(newId, name));
     }
 
-    private int GetNextUnitId() => 
-        units.Any() ? units.Max(unit => unit.Id) + 1 : 1;
+    private UnitId GetNextUnitId() =>
+        units.Any() ? new (units.Max(unit => unit.Id.Value) + 1) : new (1);
 
-    public void RemoveUnit(UnitId unitId) => 
-        units.RemoveAll(unit => unit.Id == unitId.Value);
+    public void RemoveUnit(UnitId unitId) =>
+        units.RemoveAll(unit => unit.Id == unitId);
 
     public bool IsAvailable()
     {
         DateTime now = DateTime.Now;
-        return OpenDate <= now &&  now < EndDate;
+        return OpenDate <= now && now < EndDate;
     }
 
     private bool ResourceContainsUnit(UnitId unitId) =>
-        units.Find(unit => unit.Id == unitId.Value) is null ? false : true;
+        units.Find(unit => unit.Id == unitId) is null ? false : true;
 
-    private bool UnitAlreadyBooked(UnitId unitId, TimePeriod timePeriod) => 
+    private bool UnitAlreadyBooked(UnitId unitId, TimePeriod timePeriod) =>
         bookings.Find(booking =>
             booking.UnitId.Value == unitId.Value
             && timePeriod.Overlaps(booking.TimePeriod))
         is null ? false : true;
 
-    private bool MaxBookingsForMemberReached(Guid memberId)
+    private bool MaxBookingsForMemberReached(MemberId memberId)
     {
         if (Rules is MaxBookingsPerMemberRules rules)
         {

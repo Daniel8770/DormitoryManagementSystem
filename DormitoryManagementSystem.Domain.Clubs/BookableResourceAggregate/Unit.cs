@@ -5,20 +5,13 @@ using System.Xml.Linq;
 
 namespace DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 
-public class UnitId
-{
-    public int Value { get; init; }
-    public UnitId(int value)
-    {
-        Value = value;
-    }
-}
+public record UnitId(int Value) : EntityId<int>(Value);
 
-public class Unit : Entity<int>
+public class Unit : Entity<UnitId>
 {
     public Name Name { get; private set; }
 
-    public Unit(UnitId id, string name) : base(id.Value)
+    public Unit(UnitId id, string name) : base(id)
     {
         Name = new Name(name);
     }
@@ -29,4 +22,4 @@ public class Unit : Entity<int>
     }
 }
 
- 
+
