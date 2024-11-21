@@ -64,7 +64,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nDays = 3;
@@ -80,7 +80,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nHours = 3;
@@ -96,7 +96,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = new(100);
         DateTime date = DateTime.Now;
         int nHours = 3;
@@ -109,7 +109,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nDays = 3;
@@ -124,7 +124,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nDays = 3;
@@ -139,7 +139,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nDays = 4;
@@ -154,7 +154,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nDays = 2;
@@ -169,7 +169,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nDays = 2;
@@ -186,7 +186,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nHours = 3;
@@ -201,7 +201,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nHours = 3;
@@ -216,7 +216,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nHours = 4;
@@ -231,7 +231,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nHours = 2;
@@ -246,7 +246,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource.AddUnit("Unit 1");
 
-        Guid memberId = Guid.NewGuid();
+        MemberId memberId = MemberId.Next();
         UnitId unitId = bookableResource.Units.First().Id;
         DateTime date = DateTime.Now;
         int nHours = 2;
@@ -267,9 +267,9 @@ public class BookableResourceAggregateTest
         bookableResource.AddUnit("Unit 4");
         bookableResource.AddUnit("Unit 5");
 
-        Guid memberId1 = Guid.NewGuid();
-        Guid memberId2 = Guid.NewGuid();
-        Guid memberId3 = Guid.NewGuid();
+        MemberId memberId1 = MemberId.Next();
+        MemberId memberId2 = MemberId.Next();
+        MemberId memberId3 = MemberId.Next();
         DateTime date = DateTime.Now;
         int nHours = 2;
 
