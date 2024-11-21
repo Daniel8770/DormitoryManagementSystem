@@ -25,18 +25,15 @@ using DormitoryManagementSystem.Infrastructure.ClubsContext.EFCore;
 namespace DormitoryManagementSystem.Infrastructure.Configuration;
 public static class InfrastructureConfiguration
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfigurationSection infraStructureConfig)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfigurationSection infrastructureConfig)
     {
-        string connectionstring = infraStructureConfig.GetConnectionString("Default")
-            ?? throw new Exception("Could not load default connectionstring from appsettigns.");
-
         services.AddSingleton<DomainEventPublisher, RebusDomainEventPublisher>();
         services.AddSingleton<IDomainEventSubscriber, RebusDomainEventSubscriber>();
 
-        services.Configure<RebusOptions>(infraStructureConfig.GetRequiredSection(RebusOptions.SectionName));
-        services.ConfigureRebus(GetOptions<RebusOptions>(infraStructureConfig, RebusOptions.SectionName));
+        services.Configure<RebusOptions>(infrastructureConfig.GetRequiredSection(RebusOptions.SectionName));
+        services.ConfigureRebus(GetOptions<RebusOptions>(infrastructureConfig, RebusOptions.SectionName));
 
-        services.AddRepositories(connectionstring);
+        services.AddRepositories(infrastructureConfig);
         services.AddInMemoryRepositories();
 
         return services;
@@ -78,8 +75,11 @@ public static class InfrastructureConfiguration
         return services;
     }
 
-    public static IServiceCollection AddRepositories(this IServiceCollection services, string connectionstring)
+    public static IServiceCollection AddRepositories(this IServiceCollection services, IConfigurationSection infrastructureConfig)
     {
+        string connectionstring = infrastructureConfig.GetConnectionString("Dapper")
+            ?? throw new Exception("Could not load default connectionstring from appsettigns.");
+
         services.AddScoped<IBookableResourceRepository, DapperBookableResourceRepository>(serviceProvider =>
             new DapperBookableResourceRepository(connectionstring)
         );    
