@@ -19,21 +19,23 @@ using DormitoryManagementSystem.Domain.AccountingContext.DomainEvents;
 using DormitoryManagementSystem.Domain.SharedExpensesContext.IntegrationMessages;
 using DormitoryManagementSystem.Infrastructure.ClubsContext;
 using Microsoft.EntityFrameworkCore;
+using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 
 namespace DormitoryManagementSystem.Infrastructure.Configuration;
 public static class InfrastructureConfiguration
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfigurationSection infraStructureConfig)
     {
+        string connectionstring = infraStructureConfig.GetConnectionString("Default")
+            ?? throw new Exception("Could not load default connectionstring from appsettigns.");
+
         services.AddSingleton<DomainEventPublisher, RebusDomainEventPublisher>();
         services.AddSingleton<IDomainEventSubscriber, RebusDomainEventSubscriber>();
 
         services.Configure<RebusOptions>(infraStructureConfig.GetRequiredSection(RebusOptions.SectionName));
         services.ConfigureRebus(GetOptions<RebusOptions>(infraStructureConfig, RebusOptions.SectionName));
 
-        services.ConfigureEntityFramework(infraStructureConfig.GetConnectionString("Default") 
-            ?? throw new Exception("Could not load default connectionstring from appsettigns."));
-
+        services.AddRepositories(connectionstring);
         services.AddInMemoryRepositories();
 
         return services;
@@ -75,8 +77,11 @@ public static class InfrastructureConfiguration
         return services;
     }
 
-    public static IServiceCollection AddRepositories(this IServiceCollection services)
+    public static IServiceCollection AddRepositories(this IServiceCollection services, string connectionstring)
     {
+        services.AddScoped<IBookableResourceRepository, DapperBookableResourceRepository>(serviceProvider =>
+            new DapperBookableResourceRepository(connectionstring)
+        );    
         return services;
     }
 

@@ -5,15 +5,16 @@ namespace DormitoryManagementSystem.Infrastructure.ClubsContext;
 public class EFBookableResourceRepository : IBookableResourceRepository
 {
     private readonly ClubsDBContext dbContext;
+    //private readonly BookableResourceFactory factory;
 
     public EFBookableResourceRepository(ClubsDBContext dbContext)
     {
         this.dbContext = dbContext;
     }
 
-    public Task<BookableResource> GetById(BookableResourceId id)
+    public async Task<BookableResource?> GetById(BookableResourceId id)
     {
-        throw new NotImplementedException();
+        return await dbContext.BookableResources.FindAsync(id);
     }
 
     public Task Save(BookableResource bookableResource)
@@ -26,3 +27,5 @@ public class EFBookableResourceRepository : IBookableResourceRepository
         throw new NotImplementedException();
     }
 }
+
+

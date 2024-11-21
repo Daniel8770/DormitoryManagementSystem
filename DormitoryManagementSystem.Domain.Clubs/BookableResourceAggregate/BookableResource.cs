@@ -50,7 +50,7 @@ public class BookableResource : AggregateRoot<Guid>
                 new(),
                 new());
 
-    private BookableResource(
+    public BookableResource(
         BookableResourceId id,
         string name,
         DateTime openDate,

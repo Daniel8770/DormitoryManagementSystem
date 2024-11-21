@@ -15,4 +15,8 @@ public class ClubsDBContext : DbContext
     public DbSet<Booking> Bookings { get; set; }
     public DbSet<Unit> Units { get; set; }
     public DbSet<Member> Members { get; set; }
+
+    public ClubsDBContext(DbContextOptions<ClubsDBContext> options) : base(options)
+    {
+    }
 }
