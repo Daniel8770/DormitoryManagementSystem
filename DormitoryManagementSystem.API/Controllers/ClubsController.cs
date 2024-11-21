@@ -62,7 +62,6 @@ public class ClubsController : Controller
 
         return updatedResource is not null ? Ok(updatedResource) : NotFound();
     }
-    
 }
 
 public record BookDaysRequest

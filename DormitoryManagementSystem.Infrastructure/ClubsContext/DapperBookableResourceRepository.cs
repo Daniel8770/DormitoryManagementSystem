@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using DormitoryManagementSystem.Domain.Clubs.BookableResourceAggregate;
 using DormitoryManagementSystem.Domain.ClubsContext;
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 using Microsoft.Data.SqlClient;
@@ -22,10 +21,11 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
         
         // TODO: how does the query map to the constructors?
         string bookableResourseQuery = "SELECT * FROM [Clubs].[BookableResource] WHERE Id = @bookableResourceId";
-        string unitsQuery = "SELECT Id, Name FROM [Clubs].[Unit] where [BookableResourceId] = @bookableResourceId";
+        string unitsQuery = "SELECT * FROM [Clubs].[Unit] where [BookableResourceId] = @bookableResourceId";
         string bookingsQuery = "SELECT * FROM [Clubs].[Booking] where [BookableResourceId] = @bookableResourceId";
 
-        Task<dynamic?> bookableResourceTask = connection.QueryFirstOrDefaultAsync(bookableResourseQuery, new { bookableResourceId = id.Value });
+        Task<dynamic?> bookableResourceTask = connection.QueryFirstOrDefaultAsync(bookableResourseQuery, 
+            new { bookableResourceId = id.Value });
         dynamic? bookableResource = await bookableResourceTask;
 
         if (bookableResource == null)
@@ -44,9 +44,13 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
             bookableResource.MaxBookingsPerMember is null
                 ? new Rules(bookableResource.Rules)
                 : new MaxBookingsPerMemberRules(bookableResource.Rules, bookableResource.MaxBookingsPerMember),
-            units.Select(u => new Unit(new UnitId(u.Id), u.Name)).ToList(),
+            units.Select(u => new Unit(
+                new UnitId(u.Id),
+                new BookableResourceId(u.BookableResourceId),
+                u.Name)).ToList(),
             bookings.Select(b => new Booking(
                 new BookingId(b.Id),
+                new BookableResourceId(b.BookableResourceId),
                 b.DateBooked,
                 (TimePeriod)(b.Days is not null
                     ? new DaysTimePeriod(b.StartDate, b.Days)
@@ -84,7 +88,8 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                 OpenDate = bookableResource.OpenDate,
                 EndDate = bookableResource.EndDate,
                 Rules = bookableResource.Rules.Information,
-                MaxBookingsPerMember = (int?)(bookableResource.Rules is MaxBookingsPerMemberRules maxBookings ? maxBookings.MaxBookingsPerMember : null)
+                MaxBookingsPerMember = (int?)(bookableResource.Rules is MaxBookingsPerMemberRules maxBookings 
+                    ? maxBookings.MaxBookingsPerMember : null)
             });
 
             await Task.WhenAll(bookableResource.Units.Select(unit =>
@@ -92,7 +97,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                 {
                     Id = unit.Id.Value,
                     Name = unit.Name,
-                    BookableResourceId = bookableResource.Id.Value
+                    BookableResourceId = unit.BookableResourceId.Value
                 })
             ));
 
@@ -101,7 +106,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                 {
                     Id = booking.Id.Value,
                     MemberId = booking.MemberId.Value,
-                    BookableResourceId = bookableResource.Id.Value,
+                    BookableResourceId = booking.BookableResourceId.Value,
                     UnitId = booking.UnitId.Value,
                     StartDate = booking.TimePeriod.StartDate,
                     EndDate = booking.TimePeriod.EndDate,
@@ -137,6 +142,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                 Name = @Name, 
                 BookableResourceId = @BookableResourceId
             WHERE Id = @Id
+                AND BookableResourceId = @BookableResourceId
             IF @@ROWCOUNT = 0
             INSERT INTO [Clubs].[Unit] 
             (Id, Name, BookableResourceId) 
@@ -152,6 +158,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                 Days = @Days,
                 Hours = @Hours  
             WHERE Id = @Id
+                AND BookableResourceId = @BookableResourceId
             IF @@ROWCOUNT = 0
             INSERT INTO [Clubs].[Booking] 
             (Id, MemberId, BookableResourceId, UnitId, StartDate, EndDate, DateBooked, Days, Hours) 
@@ -166,7 +173,8 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                 OpenDate = bookableResource.OpenDate,
                 EndDate = bookableResource.EndDate,
                 Rules = bookableResource.Rules.Information,
-                MaxBookingsPerMember = (int?)(bookableResource.Rules is MaxBookingsPerMemberRules maxBookings ? maxBookings.MaxBookingsPerMember : null)
+                MaxBookingsPerMember = (int?)(bookableResource.Rules is MaxBookingsPerMemberRules maxBookings 
+                    ? maxBookings.MaxBookingsPerMember : null)
             });
 
             await Task.WhenAll(bookableResource.Units.Select(unit =>
@@ -174,7 +182,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                 {
                     Id = unit.Id.Value,
                     Name = unit.Name.Value,
-                    BookableResourceId = bookableResource.Id.Value
+                    BookableResourceId = unit.BookableResourceId.Value
                 })
             ));
 
@@ -183,7 +191,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                 {
                     Id = booking.Id.Value,
                     MemberId = booking.MemberId.Value,
-                    BookableResourceId = bookableResource.Id.Value,
+                    BookableResourceId = booking.BookableResourceId.Value,
                     UnitId = booking.UnitId.Value,
                     StartDate = booking.TimePeriod.StartDate,
                     EndDate = booking.TimePeriod.EndDate,

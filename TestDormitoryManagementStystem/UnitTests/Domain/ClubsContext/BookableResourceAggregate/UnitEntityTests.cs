@@ -12,7 +12,7 @@ public class UnitEntityTests
     {
         Assert.Throws<DomainException>(() =>
         {
-            Unit unit = new(unitId, "123");
+            Unit unit = new(unitId, BookableResourceId.Next(), "123");
         });
     }
 
@@ -21,7 +21,7 @@ public class UnitEntityTests
     {
         Assert.Throws<DomainException>(() =>
         {
-            Unit unit = new(unitId, "1hejmeddig");
+            Unit unit = new(unitId, BookableResourceId.Next(), "1hejmeddig");
         });
     }
 
@@ -30,7 +30,7 @@ public class UnitEntityTests
     {
         Assert.Throws<DomainException>(() =>
         {
-            Unit unit = new(unitId, string.Empty);
+            Unit unit = new(unitId, BookableResourceId.Next(), string.Empty);
         });
     }
 
@@ -39,7 +39,7 @@ public class UnitEntityTests
     {
         Assert.Throws<DomainException>(() =>
         {
-            Unit unit = new(unitId, " ");
+            Unit unit = new(unitId, BookableResourceId.Next(), " ");
         });
     }
 
@@ -48,7 +48,7 @@ public class UnitEntityTests
     {
         Assert.Throws<DomainException>(() =>
         {
-            Unit unit = new(unitId, "hej");
+            Unit unit = new(unitId, BookableResourceId.Next(), "hej");
             unit.ChangeName("123");
         });
     }
@@ -58,7 +58,7 @@ public class UnitEntityTests
     {
         Assert.Throws<DomainException>(() =>
         {
-            Unit unit = new(unitId, "hej");
+            Unit unit = new(unitId, BookableResourceId.Next(), "hej");
             unit.ChangeName("1hejmeddig");
         });
     }
@@ -68,7 +68,7 @@ public class UnitEntityTests
     {
         Assert.Throws<DomainException>(() =>
         {
-            Unit unit = new(unitId, "hej");
+            Unit unit = new(unitId, BookableResourceId.Next(), "hej");
             unit.ChangeName(string.Empty);
         });
     }
@@ -78,7 +78,7 @@ public class UnitEntityTests
     {
         Assert.Throws<DomainException>(() =>
         {
-            Unit unit = new(unitId, "hej");
+            Unit unit = new(unitId, BookableResourceId.Next(), "hej");
             unit.ChangeName(" ");
         });
     }

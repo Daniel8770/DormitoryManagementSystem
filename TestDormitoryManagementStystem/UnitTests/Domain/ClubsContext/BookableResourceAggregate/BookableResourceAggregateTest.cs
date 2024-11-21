@@ -1,5 +1,4 @@
-﻿using DormitoryManagementSystem.Domain.Clubs.BookableResourceAggregate;
-using DormitoryManagementSystem.Domain.ClubsContext;
+﻿using DormitoryManagementSystem.Domain.ClubsContext;
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 using DormitoryManagementSystem.Domain.Common.Exceptions;
 

@@ -9,10 +9,17 @@ internal class UnitEntityConfiguration : IEntityTypeConfiguration<Unit>
     {
         builder.HasKey(u => u.Id);
 
-        //builder.Property(u => u.Id).HasConversion(
-        //    id => id,
-        //    value => new UnitId(value));
+        builder.Property(u => u.Id).HasConversion(
+            id => id.Value,
+            value => new UnitId(value));
 
+        builder.Property(u => u.Name).HasConversion(
+            name => name.Value,
+            value => new Name(value));
+
+        builder.Property(u => u.BookableResourceId).HasConversion(
+            id => id.Value,
+            value => new BookableResourceId(value));
 
     }
 }

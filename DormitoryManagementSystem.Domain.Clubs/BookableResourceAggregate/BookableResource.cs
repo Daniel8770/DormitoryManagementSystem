@@ -1,13 +1,8 @@
-﻿using DormitoryManagementSystem.Domain.Clubs.BookableResourceAggregate;
-using DormitoryManagementSystem.Domain.Common.Aggregates;
+﻿using DormitoryManagementSystem.Domain.Common.Aggregates;
 using DormitoryManagementSystem.Domain.Common.Entities;
 using DormitoryManagementSystem.Domain.Common.Exceptions;
-using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 
@@ -92,6 +87,7 @@ public class BookableResource : AggregateRoot<BookableResourceId>
     {
         return new Booking(
             GetNextBookingId(),
+            Id,
             DateTime.Now,
             timePeriod,
             memberId,
@@ -127,7 +123,7 @@ public class BookableResource : AggregateRoot<BookableResourceId>
     public void AddUnit(string name)
     {
         UnitId newId = GetNextUnitId();
-        units.Add(new Unit(newId, name));
+        units.Add(new Unit(newId, Id, name));
     }
 
     private UnitId GetNextUnitId() =>

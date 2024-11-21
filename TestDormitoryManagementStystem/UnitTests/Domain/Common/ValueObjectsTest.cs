@@ -1,4 +1,4 @@
-﻿using DormitoryManagementSystem.Domain.Clubs.BookableResourceAggregate;
+﻿using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 using System;
 using System.Collections.Generic;
 using System.Linq;

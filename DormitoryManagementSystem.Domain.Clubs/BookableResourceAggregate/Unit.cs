@@ -10,10 +10,12 @@ public record UnitId(int Value) : EntityId<int>(Value);
 public class Unit : Entity<UnitId>
 {
     public Name Name { get; private set; }
+    public BookableResourceId BookableResourceId { get; private set; }
 
-    public Unit(UnitId id, string name) : base(id)
+    public Unit(UnitId id, BookableResourceId bookableResourceId, string name) : base(id)
     {
         Name = new Name(name);
+        BookableResourceId = bookableResourceId;
     }
 
     public void ChangeName(string name)
