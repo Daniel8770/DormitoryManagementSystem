@@ -19,7 +19,6 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
         using var connection = new SqlConnection(connectionString);
         connection.Open();
         
-        // TODO: how does the query map to the constructors?
         string bookableResourseQuery = "SELECT * FROM [Clubs].[BookableResource] WHERE Id = @bookableResourceId";
         string unitsQuery = "SELECT * FROM [Clubs].[Unit] where [BookableResourceId] = @bookableResourceId";
         string bookingsQuery = "SELECT * FROM [Clubs].[Booking] where [BookableResourceId] = @bookableResourceId";

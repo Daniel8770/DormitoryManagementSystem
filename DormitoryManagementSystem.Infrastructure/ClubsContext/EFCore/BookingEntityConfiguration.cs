@@ -9,7 +9,7 @@ internal class BookingEntityConfiguration : IEntityTypeConfiguration<Booking>
 {
     public void Configure(EntityTypeBuilder<Booking> builder)
     {
-        builder.HasKey(b => b.Id);
+        builder.HasKey(b => new { b.Id, b.BookableResourceId });
 
         builder.Property(b => b.Id).HasConversion(
             id => id.Value,
