@@ -1,5 +1,6 @@
 ﻿using DormitoryManagementSystem.Domain.Common.Aggregates;
 using DormitoryManagementSystem.Domain.Common.DomainEvents;
+using DormitoryManagementSystem.Domain.Common.Entities;
 using DormitoryManagementSystem.Domain.Common.Exceptions;
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using DormitoryManagementSystem.Domain.KitchenContext.DomainEvents;
@@ -10,9 +11,13 @@ using System.Collections.Immutable;
 
 namespace DormitoryManagementSystem.Domain.KitchenContext.Economy.KitchenBalanceAggregate;
 
-public class KitchenBalance
+public record KitchenBalanceId(Guid Value) : EntityId<Guid>(Value)
 {
-    public KitchenBalanceId Id { get; init; }
+    public static KitchenBalanceId Next() => new(Guid.NewGuid());
+}
+
+public class KitchenBalance : Entity<KitchenBalanceId>
+{
     public KitchenBalanceInformation Information { get; private set; }
     public KitchenId KitchenId { get; init; }
     public ImmutableList<ResidentId> Participants => participants.ToImmutableList();
@@ -29,16 +34,16 @@ public class KitchenBalance
         Currency currency)
     {
         KitchenBalance newBalance = new KitchenBalance(id, name, kitchenId, participants, currency);
-        DomainEventStore.Raise(new KitchenBalanceCreatedEvent(newBalance.Id.Value, participants.Select(id => id.Value), currency.ToString()));
+        DomainEventStore.Raise(new KitchenBalanceCreatedEvent(newBalance.Id.Value, participants, currency.ToString()));
         return newBalance;
     }
 
-    internal KitchenBalance(KitchenBalanceId id, string name, KitchenId kitchenId, IEnumerable<ResidentId> participants, Currency currency)
+    internal KitchenBalance(KitchenBalanceId id, string name, KitchenId kitchenId, IEnumerable<ResidentId> participants, Currency currency) 
+        : base(id)
     {
-        Information = new KitchenBalanceInformation(name);
+        Information = KitchenBalanceInformation.Create(name);
         this.participants = participants.ToList();
         KitchenId = kitchenId;  
-        Id = id;
         Currency = currency;
     }
 

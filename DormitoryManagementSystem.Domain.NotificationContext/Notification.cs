@@ -2,15 +2,18 @@
 
 namespace DormitoryManagementSystem.Domain.NotificationContext;
 
-public class Notification 
+public record class NotificationId(Guid Value) : EntityId<Guid>(Value)
 {
-    public NotificationId Id { get; init; }
+    public static NotificationId Next() => new(Guid.NewGuid());
+}
+
+public class Notification : Entity<NotificationId>
+{
     public string Message { get; init; }
     public DateTime CreatedAt { get; init; } = DateTime.Now;
 
-    public Notification(NotificationId id, string message)
+    public Notification(NotificationId id, string message) : base(id)
     {
-        Id = id;
         Message = message;
     }
 }

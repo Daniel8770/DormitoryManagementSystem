@@ -1,8 +1,9 @@
 ﻿using DormitoryManagementSystem.Domain.Common.ValueObjects;
+using System.Runtime.CompilerServices;
 
 namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
 
-public class KitchenInformation
+public record KitchenInformation : ValueObject
 {
     public string Name { get; init; }
     public string? Description { get; init; }
@@ -14,7 +15,7 @@ public class KitchenInformation
     public static KitchenInformation CreateWithDescription(string name, string description) => 
         new KitchenInformation(name, description, null);
 
-    public static KitchenInformation CreateWith(string name, string rules) =>
+    public static KitchenInformation CreateWithRules(string name, string rules) =>
         new KitchenInformation(name, null, rules);
 
     public static KitchenInformation CreateWithDescriptionAndRules(string name, string description, string rules) => 
@@ -27,9 +28,9 @@ public class KitchenInformation
         Rules = rules;
     }
 
-    public KitchenInformation UpdateRules(string rules) => new(Name, Description, rules);
-    public KitchenInformation DeleteRules() => new(Name, Description, null);
+    public KitchenInformation UpdateRules(string rules) => this with { Rules = rules };
+    public KitchenInformation DeleteRules() => this with { Rules = null };
 
-    public KitchenInformation UpdateDescription(string description) => new(Name, description, Rules);
-    public KitchenInformation DeleteDescription() => new(Name, null, Rules);
+    public KitchenInformation UpdateDescription(string description) => this with { Description = description };
+    public KitchenInformation DeleteDescription() => this with { Description = null };
 }
