@@ -20,18 +20,18 @@ public class AccountTest
             new BankInformation(),
             new Administrator());
 
-        account.RegisterDeposit(new Money(100.25m, currency));
-        account.RegisterDeposit(new Money(1000.45m, currency));
-        account.RegisterWithdrawal(new Money(100.75m, currency));
-        account.RegisterDebit(new Money(100, currency));
-        account.RegisterDebit(new Money(300, currency));
-        account.RegisterCredit(new Money(3.145m, currency));
-        account.RegisterCredit(new Money(200.58m, currency));
+        account.RegisterDeposit(Money.CreateNew(100.25m, currency));
+        account.RegisterDeposit(Money.CreateNew(1000.45m, currency));
+        account.RegisterWithdrawal(Money.CreateNew(100.75m, currency));
+        account.RegisterDebit(Money.CreateNew       (100, currency));
+        account.RegisterDebit(Money.CreateNew(300, currency));
+        account.RegisterCredit(Money.CreateNew(3.145m, currency));
+        account.RegisterCredit(Money.CreateNew(200.58m, currency));
 
         decimal expectedBalance = 1000.45m + 100.25m - 100.75m;
         Money actualBalance = account.GetBalance();
 
-        actualBalance.Value.Should().Be(new Money(expectedBalance, currency).Value);
+        actualBalance.Value.Should().Be(Money.CreateNew(expectedBalance, currency).Value);
     }
 
     [Fact]
@@ -48,8 +48,8 @@ public class AccountTest
 
         Assert.Throws<CurrencyMismatchException>(() =>
         {
-            account.RegisterDebit(new Money(100, currency1));
-            account.RegisterCredit(new Money(100, currency2));
+            account.RegisterDebit(Money.CreateNew(100, currency1));
+            account.RegisterCredit(Money.CreateNew(100, currency2));
         });
     }
 
@@ -68,15 +68,15 @@ public class AccountTest
             new BankInformation(),
             new Administrator());
 
-        account.RegisterDeposit(new Money(100.25m, currency));
-        account.RegisterWithdrawal(new Money(100.75m, currency));
-        account.RegisterDebit(new Money(100, currency));
-        account.RegisterDebit(new Money(300, currency));
-        account.RegisterCredit(new Money(3.145m, currency));
-        account.RegisterCredit(new Money(200.58m, currency));
+        account.RegisterDeposit(Money.CreateNew(100.25m, currency));
+        account.RegisterWithdrawal(Money.CreateNew(100.75m, currency));
+        account.RegisterDebit(Money.CreateNew(100, currency));
+        account.RegisterDebit(Money.CreateNew(300, currency));
+        account.RegisterCredit(Money.CreateNew(3.145m, currency));
+        account.RegisterCredit(Money.CreateNew(200.58m, currency));
 
         Money oldBalance = account.GetBalance();
-        Money depositAmount = new Money(amount, currency);
+        Money depositAmount = Money.CreateNew(amount, currency);
         account.RegisterDeposit(depositAmount);
         Money newBalance = account.GetBalance();
 
@@ -98,15 +98,15 @@ public class AccountTest
             new BankInformation(),
             new Administrator());
 
-        account.RegisterDeposit(new Money(100.25m, currency));
-        account.RegisterWithdrawal(new Money(100.75m, currency));
-        account.RegisterDebit(new Money(100, currency));
-        account.RegisterDebit(new Money(300, currency));
-        account.RegisterCredit(new Money(3.145m, currency));
-        account.RegisterCredit(new Money(200.58m, currency));
+        account.RegisterDeposit(Money.CreateNew(100.25m, currency));
+        account.RegisterWithdrawal(Money.CreateNew(100.75m, currency));
+        account.RegisterDebit(Money.CreateNew(100, currency));
+        account.RegisterDebit(Money.CreateNew(300, currency));
+        account.RegisterCredit(Money.CreateNew(3.145m, currency));
+        account.RegisterCredit(Money.CreateNew(200.58m, currency));
 
         Money oldBalance = account.GetBalance();
-        Money withdrawalAmount = new Money(amount, currency);
+        Money withdrawalAmount = Money.CreateNew(amount, currency);
         account.RegisterWithdrawal(withdrawalAmount);
         Money newBalance = account.GetBalance();
 
@@ -123,12 +123,12 @@ public class AccountTest
             new BankInformation(),
             new Administrator());
 
-        account.RegisterDeposit(new Money(100.25m, currency));
-        account.RegisterWithdrawal(new Money(100.75m, currency));
-        account.RegisterDebit(new Money(100, currency));
-        account.RegisterDebit(new Money(300, currency));
-        account.RegisterCredit(new Money(3.145m, currency));
-        account.RegisterCredit(new Money(200.58m, currency));
+        account.RegisterDeposit(Money.CreateNew(100.25m, currency));
+        account.RegisterWithdrawal(Money.CreateNew(100.75m, currency));
+        account.RegisterDebit(Money.CreateNew(100, currency));
+        account.RegisterDebit(Money.CreateNew(300, currency));
+        account.RegisterCredit(Money.CreateNew(3.145m, currency));
+        account.RegisterCredit(Money.CreateNew(200.58m, currency));
 
         decimal expected = 3.145m + 200.58m;
 
@@ -147,12 +147,12 @@ public class AccountTest
             new BankInformation(),
             new Administrator());
 
-        account.RegisterDeposit(new Money(100.25m, currency));
-        account.RegisterWithdrawal(new Money(100.75m, currency));
-        account.RegisterDebit(new Money(100, currency));
-        account.RegisterDebit(new Money(300, currency));
-        account.RegisterCredit(new Money(3.145m, currency));
-        account.RegisterCredit(new Money(200.58m, currency));
+        account.RegisterDeposit(Money.CreateNew(100.25m, currency));
+        account.RegisterWithdrawal(Money.CreateNew(100.75m, currency));
+        account.RegisterDebit(Money.CreateNew(100, currency));
+        account.RegisterDebit(Money.CreateNew(300, currency));
+        account.RegisterCredit(Money.CreateNew(3.145m, currency));
+        account.RegisterCredit(Money.CreateNew(200.58m, currency));
 
         decimal expected = 100 + 300;
 
@@ -171,12 +171,12 @@ public class AccountTest
             new BankInformation(),
             new Administrator());
 
-        account.RegisterDeposit(new Money(100.25m, currency));
-        account.RegisterWithdrawal(new Money(100.75m, currency));
-        account.RegisterDebit(new Money(100, currency));
-        account.RegisterDebit(new Money(300, currency));
-        account.RegisterCredit(new Money(3.145m, currency));
-        account.RegisterCredit(new Money(200.58m, currency));
+        account.RegisterDeposit(Money.CreateNew(100.25m, currency));
+        account.RegisterWithdrawal(Money.CreateNew(100.75m, currency));
+        account.RegisterDebit(Money.CreateNew(100, currency));
+        account.RegisterDebit(Money.CreateNew(300, currency));
+        account.RegisterCredit(Money.CreateNew(3.145m, currency));
+        account.RegisterCredit(Money.CreateNew(200.58m, currency));
 
         decimal expected = 100.25m - 100.75m - 3.145m - 200.58m;
 
@@ -195,12 +195,12 @@ public class AccountTest
             new BankInformation(),
             new Administrator());
 
-        account.RegisterDeposit(new Money(100.25m, currency));
-        account.RegisterWithdrawal(new Money(100.75m, currency));
-        account.RegisterDebit(new Money(100, currency));
-        account.RegisterDebit(new Money(300, currency));
-        account.RegisterCredit(new Money(3.145m, currency));
-        account.RegisterCredit(new Money(200.58m, currency));
+        account.RegisterDeposit(Money.CreateNew(100.25m, currency));
+        account.RegisterWithdrawal(Money.CreateNew(100.75m, currency));
+        account.RegisterDebit(Money.CreateNew(100, currency));
+        account.RegisterDebit(Money.CreateNew(300, currency));
+        account.RegisterCredit(Money.CreateNew(3.145m, currency));
+        account.RegisterCredit(Money.CreateNew(200.58m, currency));
 
         decimal expected = 100.25m - 100.75m + 100 + 300 - 3.145m - 200.58m;
 

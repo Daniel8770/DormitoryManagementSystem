@@ -1,16 +1,9 @@
-﻿using Castle.Components.DictionaryAdapter;
-using DormitoryManagementSystem.Application.AccountingContext;
+﻿using DormitoryManagementSystem.Application.AccountingContext;
 using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate;
-using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
 using DormitoryManagementSystem.Domain.Common.Accounting;
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using DormitoryManagementSystem.Infrastructure.AccountingContext;
 using FluentAssertions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestDormitoryManagementStystem.UnitTests.Application.AccountingContext;
 
@@ -29,10 +22,10 @@ public class AccountServiceTest
 
         accountId = AccountId.Next();
         Account persistedAccount = new Account(accountId, new BankInformation(), new Administrator());
-        persistedAccount.RegisterDeposit(new Money(100.25m, currency));
-        persistedAccount.RegisterDeposit(new Money(300, currency));
-        persistedAccount.RegisterWithdrawal(new Money(100.75m, currency));
-        persistedAccount.RegisterWithdrawal(new Money(100, currency));
+        persistedAccount.RegisterDeposit(Money.CreateNew(100.25m, currency));
+        persistedAccount.RegisterDeposit(Money.CreateNew(300, currency));
+        persistedAccount.RegisterWithdrawal(Money.CreateNew(100.75m, currency));
+        persistedAccount.RegisterWithdrawal(Money.CreateNew(100, currency));
 
         List<Account> persistedAccounts = new()
         {
@@ -64,7 +57,7 @@ public class AccountServiceTest
     [Fact]
     public void RegisterDepositOnAccount()
     {
-        Money depositAmmount = new Money(200.55m, currency);
+        Money depositAmmount = Money.CreateNew(200.55m, currency);
 
         Money oldBalance = accountService.GetAccountBalance(accountId);
         accountService.RegisterDepositOnAccount(accountId, depositAmmount);
@@ -76,7 +69,7 @@ public class AccountServiceTest
     [Fact]
     public void RegisterWithdrawalOnAccount()
     {
-        Money withdrawalAmmount = new Money(200.55m, currency);
+        Money withdrawalAmmount = Money.CreateNew(200.55m, currency);
 
         Money oldBalance = accountService.GetAccountBalance(accountId);
         accountService.RegisterWithdrawalOnAccount(accountId, withdrawalAmmount);

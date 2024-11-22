@@ -14,6 +14,6 @@ public class Credit : Entry
 
     public override Money GetRelativeAmount()
     {
-        return new Money(-Amount.Value, Amount.Currency);
+        return Money.CreateNew(-Amount.Value, Amount.Currency);
     }
 }

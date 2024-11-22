@@ -94,7 +94,7 @@ public class Account : AggregateRoot<AccountId>
         return entries.Entries
             .Where(e => e is Deposit || e is Withdrawal)
             .Select(e => e.GetRelativeAmount())
-            .Aggregate((acc, m) => acc + m);
+            .Sum();
     }
 
     public Money GetTotalCredit()
@@ -102,7 +102,7 @@ public class Account : AggregateRoot<AccountId>
         return entries.Entries
             .Where(e => e is Credit)
             .Select(e => e.Amount)
-            .Aggregate((m1, m2) => m1 + m2);
+            .Sum();
     }
 
     public Money GetTotalDebit()
@@ -110,7 +110,7 @@ public class Account : AggregateRoot<AccountId>
         return entries.Entries
             .Where(e => e is Debit)
             .Select(e => e.Amount)
-            .Aggregate((m1, m2) => m1 + m2);
+            .Sum();
     }
 
     private void RaiseIfDispoableAmountLowerLimitBreached(Money disposableBefore, Money disposableAfter)

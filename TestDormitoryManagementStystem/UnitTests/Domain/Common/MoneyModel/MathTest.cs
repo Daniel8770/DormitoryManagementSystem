@@ -17,8 +17,8 @@ public class MathTest
     [InlineData(1000, -1000000.329048, Currency.DKK)]
     public void Addition(decimal amount1, decimal amount2, Currency currency)
     {
-        Money money1 = new Money(amount1, currency);
-        Money money2 = new Money(amount2, currency);
+        Money money1 = Money.CreateNew(amount1, currency);
+        Money money2 = Money.CreateNew(amount2, currency);
 
         Money result = money1 + money2;
 
@@ -33,8 +33,8 @@ public class MathTest
     [InlineData(1000, -1000000.329048, Currency.DKK)]
     public void Subtraction(decimal amount1, decimal amount2, Currency currency)
     {
-        Money money1 = new Money(amount1, currency);
-        Money money2 = new Money(amount2, currency);
+        Money money1 = Money.CreateNew(amount1, currency);
+        Money money2 = Money.CreateNew(amount2, currency);
 
         Money result = money1 - money2;
 
@@ -49,8 +49,8 @@ public class MathTest
     [InlineData(1000, -1000000.329048, Currency.DKK)]
     public void Multiplication(decimal amount1, decimal amount2, Currency currency)
     {
-        Money money1 = new Money(amount1, currency);
-        Money money2 = new Money(amount2, currency);
+        Money money1 = Money.CreateNew(amount1, currency);
+        Money money2 = Money.CreateNew(amount2, currency);
 
         Money result = money1 * money2;
 
@@ -65,8 +65,8 @@ public class MathTest
     [InlineData(1000, -1000000.329048, Currency.DKK)]
     public void Divition(decimal amount1, decimal amount2, Currency currency)
     {
-        Money money1 = new Money(amount1, currency);
-        Money money2 = new Money(amount2, currency);
+        Money money1 = Money.CreateNew(amount1, currency);
+        Money money2 = Money.CreateNew(amount2, currency);
 
         Money result = money1 / money2;
 
@@ -77,8 +77,8 @@ public class MathTest
     [InlineData(100, Currency.DKK, 200, Currency.USD)]
     public void WhenCurrencyMismatchInAddition_ShouldThrow(decimal amount1, Currency currency1, decimal amount2, Currency currency2)
     {
-        Money money1 = new Money(amount1, currency1);
-        Money money2 = new Money(amount2, currency2);
+        Money money1 = Money.CreateNew(amount1, currency1);
+        Money money2 = Money.CreateNew(amount2, currency2);
 
         Assert.Throws<CurrencyMismatchException>(() =>
         {
@@ -90,8 +90,8 @@ public class MathTest
     [InlineData(100, Currency.DKK, 200, Currency.USD)]
     public void WhenCurrencyMismatchInSubtraction_ShouldThrow(decimal amount1, Currency currency1, decimal amount2, Currency currency2)
     {
-        Money money1 = new Money(amount1, currency1);
-        Money money2 = new Money(amount2, currency2);
+        Money money1 = Money.CreateNew(amount1, currency1);
+        Money money2 = Money.CreateNew(amount2, currency2);
 
         Assert.Throws<CurrencyMismatchException>(() =>
         {
@@ -103,8 +103,8 @@ public class MathTest
     [InlineData(100, Currency.DKK, 200, Currency.USD)]
     public void WhenCurrencyMismatchInMultiplication_ShouldThrow(decimal amount1, Currency currency1, decimal amount2, Currency currency2)
     {
-        Money money1 = new Money(amount1, currency1);
-        Money money2 = new Money(amount2, currency2);
+        Money money1 = Money.CreateNew(amount1, currency1);
+        Money money2 = Money.CreateNew(amount2, currency2);
 
         Assert.Throws<CurrencyMismatchException>(() =>
         {
@@ -116,8 +116,8 @@ public class MathTest
     [InlineData(100, Currency.DKK, 200, Currency.USD)]
     public void WhenCurrencyMismatchInDivition_ShouldThrow(decimal amount1, Currency currency1, decimal amount2, Currency currency2)
     {
-        Money money1 = new Money(amount1, currency1);
-        Money money2 = new Money(amount2, currency2);
+        Money money1 = Money.CreateNew(amount1, currency1);
+        Money money2 = Money.CreateNew(amount2, currency2);
 
         Assert.Throws<CurrencyMismatchException>(() =>
         {
@@ -132,7 +132,7 @@ public class MathTest
     [InlineData(3.141, 100, 0.03141)]
     public void DivideBy(decimal amount, int n, decimal expected)
     {
-        Money money = new Money(amount, Currency.DKK);
+        Money money = Money.CreateNew(amount, Currency.DKK);
         Money result = money.DivideBy(n);
         result.Value.Should().Be(expected);  
     }
