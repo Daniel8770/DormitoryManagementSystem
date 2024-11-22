@@ -71,22 +71,26 @@ public static class InfrastructureConfiguration
 
     public static IServiceCollection ConfigureEntityFramework(this IServiceCollection services, string connectionstring)
     {
-        services.AddDbContext<ClubsDBContext>(options =>
-            options.UseSqlServer(connectionstring)
-        );
+        
         return services;
     }
 
     public static IServiceCollection AddRepositories(this IServiceCollection services, IConfigurationSection infrastructureConfig)
     {
-        string connectionstring = infrastructureConfig.GetConnectionString("Dapper")
+        string connectionstring = infrastructureConfig.GetConnectionString("EntityFramework")
             ?? throw new Exception("Could not load default connectionstring from appsettigns.");
 
-        services.AddScoped<IBookableResourceRepository, DapperBookableResourceRepository>(serviceProvider =>
-            new DapperBookableResourceRepository(
-                connectionstring, 
-                serviceProvider.GetRequiredService<IDomainEventPublisher>())
-        );    
+        services.AddDbContext<ClubsDBContext>(options =>
+            options.UseSqlServer(connectionstring)
+        );
+
+        services.AddScoped<IBookableResourceRepository, EFBookableResourceRepository>();
+
+        //services.AddScoped<IBookableResourceRepository, DapperBookableResourceRepository>(serviceProvider =>
+        //    new DapperBookableResourceRepository(
+        //        connectionstring, 
+        //        serviceProvider.GetRequiredService<IDomainEventPublisher>())
+        //);    
         return services;
     }
 

@@ -26,13 +26,6 @@ internal class BookingEntityConfiguration : IEntityTypeConfiguration<Booking>
         builder.Property(b => b.BookableResourceId).HasConversion(
             id => id.Value,
             value => new BookableResourceId(value));
-
-        builder.Property(b => b.TimePeriod.StartDate)
-            .HasColumnName("StartDate");
-
-        builder.Property(b => b.TimePeriod.EndDate)
-            .HasColumnName("EndDate");
-
         // TODO: how do I handle polymorphic mapping of days and hours?
     }
 }
