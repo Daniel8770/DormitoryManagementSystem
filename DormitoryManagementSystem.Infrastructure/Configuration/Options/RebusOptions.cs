@@ -10,6 +10,7 @@ public class RebusOptions
     public int MaxParallelism { get; set; }
     public string InputQueue { get; set; } = string.Empty;
     public string ErrorQueue { get; set; } = string.Empty;
+    public string OutboxTable { get; set; } = string.Empty;
     public string SubscriptionTable { get; set; } = string.Empty;
     public string ConnectionString { get; set; } = string.Empty;
 }

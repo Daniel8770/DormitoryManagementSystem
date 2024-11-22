@@ -1,6 +1,5 @@
 using DormitoryManagementSystem.API.Configuration.IServiceCollectionExtensions;
 using DormitoryManagementSystem.API.Configuration.Logging;
-using DormitoryManagementSystem.API.Middlewares;
 using DormitoryManagementSystem.Infrastructure.Common.DomainEvents;
 using Serilog;
 

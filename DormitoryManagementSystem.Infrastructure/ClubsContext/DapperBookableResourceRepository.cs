@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using DormitoryManagementSystem.Domain.ClubsContext;
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
+using DormitoryManagementSystem.Infrastructure.Common.DomainEvents;
 using Microsoft.Data.SqlClient;
 
 namespace DormitoryManagementSystem.Infrastructure.ClubsContext;
@@ -8,10 +9,12 @@ namespace DormitoryManagementSystem.Infrastructure.ClubsContext;
 public class DapperBookableResourceRepository : IBookableResourceRepository
 {
     private string connectionString;
+    private IDomainEventPublisher domainEventPublisher;
 
-    public DapperBookableResourceRepository(string connectionString)
+    public DapperBookableResourceRepository(string connectionString, IDomainEventPublisher domainEventPublisher)
     {
         this.connectionString = connectionString;
+        this.domainEventPublisher = domainEventPublisher;
     }
 
     public async Task<BookableResource?> GetById(BookableResourceId id)
@@ -61,9 +64,10 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
 
     public async Task Save(BookableResource bookableResource)
     {
-        using var connection = new SqlConnection(connectionString);
+        using SqlConnection connection = new SqlConnection(connectionString);
         await connection.OpenAsync();
-        using var transaction = await connection.BeginTransactionAsync();
+        using SqlTransaction transaction = connection.BeginTransaction();
+        domainEventPublisher.SetTransaction(transaction);
 
         string insertBookableResource = 
             @"INSERT INTO [Clubs].[BookableResource] 
@@ -112,7 +116,8 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                     DateBooked = booking.DateBooked
                 })
             ));
-            
+
+            await domainEventPublisher.PublishAllEventsInEventStore();
             await transaction.CommitAsync();
         }
         catch (Exception)
@@ -124,9 +129,10 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
 
     public async Task Update(BookableResource bookableResource)
     {
-        using var connection = new SqlConnection(connectionString);
+        using SqlConnection connection = new SqlConnection(connectionString);
         await connection.OpenAsync();
-        using var transaction = await connection.BeginTransactionAsync();
+        using SqlTransaction transaction = connection.BeginTransaction();
+        domainEventPublisher.SetTransaction(transaction);
 
         string updateBookableResource =
             @"UPDATE [Clubs].[BookableResource] SET
@@ -202,6 +208,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                 })
             ));
 
+            await domainEventPublisher.PublishAllEventsInEventStore();
             await transaction.CommitAsync();
         }
         catch (Exception)

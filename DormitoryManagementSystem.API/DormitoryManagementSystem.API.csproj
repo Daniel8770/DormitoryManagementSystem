@@ -25,4 +25,8 @@
     <ProjectReference Include="..\DormitoryManagementSystem.Infrastructure\DormitoryManagementSystem.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Middlewares\" />
+  </ItemGroup>
+
 </Project>

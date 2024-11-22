@@ -1,4 +1,5 @@
 ﻿using DormitoryManagementSystem.Domain.Common.Aggregates;
+using DormitoryManagementSystem.Domain.Common.DomainEvents;
 using DormitoryManagementSystem.Domain.Common.Entities;
 using DormitoryManagementSystem.Domain.Common.Exceptions;
 using System.Collections.Immutable;
