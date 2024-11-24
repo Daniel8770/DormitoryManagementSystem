@@ -1,4 +1,6 @@
-﻿using DormitoryManagementSystem.Application.Clubs;
+﻿using DormitoryManagementSystem.API.DTOs.Requests.ClubsContext;
+using DormitoryManagementSystem.API.DTOs.Responses.ClubsContext;
+using DormitoryManagementSystem.Application.Clubs;
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,20 +22,22 @@ public class ClubsController : Controller
         BookableResource? found = await bookableResourceService
             .GetBookableResourceById(new BookableResourceId(bookableResourceId));
 
-        return found is not null ? Ok(found) : NotFound();
+        return found is not null 
+            ? Ok(found.ConvertToResponse()) 
+            : NotFound();
     }
 
     [HttpPut]
     [Route("api/clubs/{clubId}/bookableResources/{bookableResourceId}/addUnit")]
-    public async Task<IActionResult> AddUnitToBookableResource(Guid clubId, Guid bookableResourceId, string unitName)
+    public async Task<IActionResult> AddUnitToBookableResource(Guid clubId, Guid bookableResourceId, AddUnitToBookableResourceRequest request)
     {
         BookableResource? updatedResource = await bookableResourceService
-            .AddUnit(new BookableResourceId(bookableResourceId), unitName);
+            .AddUnit(new BookableResourceId(bookableResourceId), request.UnitName);
 
         if (updatedResource is null)
             return NotFound();
 
-        return Ok(updatedResource);
+        return Ok(updatedResource.ConvertToResponse());
     }
 
     [HttpPost]
@@ -46,7 +50,7 @@ public class ClubsController : Controller
             request.OpenDate,
             request.EndDate);
 
-        return Ok(newResource);
+        return Ok(newResource.ConvertToResponse());
     }
 
     [HttpPut]
@@ -60,22 +64,11 @@ public class ClubsController : Controller
             request.Date,
             request.Days);
 
-        return updatedResource is not null ? Ok(updatedResource) : NotFound();
+        return updatedResource is not null 
+            ? Ok(updatedResource.ConvertToResponse()) 
+            : NotFound();
     }
 }
 
-public record BookDaysRequest
-(
-    Guid MemberId,
-    int UnitId,
-    DateTime Date,
-    int Days
-);
 
-public record CreateNewBookableResourceRequest
-(
-    string Name,
-    string Rules,
-    DateTime OpenDate,
-    DateTime EndDate
-);
+
