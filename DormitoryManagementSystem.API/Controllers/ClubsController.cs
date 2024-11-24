@@ -8,9 +8,9 @@ namespace DormitoryManagementSystem.API.Controllers;
 
 public class ClubsController : Controller
 {
-    private BookableResourceService bookableResourceService;
+    private IBookableResourceService bookableResourceService;
 
-    public ClubsController(BookableResourceService bookableResourceService)
+    public ClubsController(IBookableResourceService bookableResourceService)
     {
         this.bookableResourceService = bookableResourceService;
     }

@@ -24,6 +24,8 @@ using DormitoryManagementSystem.Domain.ClubsContext.DomainEvents;
 using Rebus.Bus;
 using DormitoryManagementSystem.Infrastructure.Common.Persistence;
 using DormitoryManagementSystem.Domain.ClubsContext.IntegrationMessages;
+using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate;
+using DormitoryManagementSystem.Infrastructure.AccountingContext;
 
 namespace DormitoryManagementSystem.Infrastructure.Configuration;
 public static class InfrastructureConfiguration
@@ -90,6 +92,7 @@ public static class InfrastructureConfiguration
         services.AddSingleton<IKitchenRepository, InMemoryKitchenRepository>();
         services.AddSingleton<IKitchenBalanceRepository, InMemoryKitchenBalanceRepository>();
         services.AddSingleton<ISharedExpensesBalancerRepository, InMemorySharedExpensesBalancerRepository>();
+        services.AddSingleton<IAccountRepository, InMemoryAccountRepository>();
 
         return services;
     }

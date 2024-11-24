@@ -4,7 +4,7 @@ using DormitoryManagementSystem.Domain.Common.MoneyModel;
 
 namespace DormitoryManagementSystem.Application.AccountingContext;
 
-public class AccountService
+public class AccountService : IAccountService
 {
     private IAccountRepository accountRepository;
 

@@ -7,7 +7,7 @@ using DormitoryManagementSystem.Infrastructure.Common.DomainEvents;
 
 
 namespace DormitoryManagementSystem.Application.KitchenContext;
-public class KitchenService
+public class KitchenService : IKitchenService
 {
     IKitchenRepository kitchenRepository;
     IKitchenBalanceRepository kitchenBalanceRepository;

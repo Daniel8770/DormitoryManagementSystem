@@ -2,7 +2,7 @@
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 
 namespace DormitoryManagementSystem.Application.Clubs;
-public class BookableResourceService
+public class BookableResourceService : IBookableResourceService
 {
     private IBookableResourceRepository repository;
 

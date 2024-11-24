@@ -15,10 +15,10 @@ namespace DormitoryManagementSystem.API.Controllers;
 [Route("api/kitchens")]
 public class KitchensController : Controller
 {
-    private KitchenService kitchenService;
+    private IKitchenService kitchenService;
     private LinkGenerator linkGenerator;
 
-    public KitchensController(KitchenService kitchenService, LinkGenerator linkGenerator)
+    public KitchensController(IKitchenService kitchenService, LinkGenerator linkGenerator)
     {
         this.kitchenService = kitchenService;
         this.linkGenerator = linkGenerator;
