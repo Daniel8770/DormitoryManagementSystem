@@ -1,8 +1,9 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using DormitoryManagementSystem.Domain.Common.DomainEvents;
+using Microsoft.Data.SqlClient;
 
 
 namespace DormitoryManagementSystem.Infrastructure.Common.DomainEvents;
 public interface IDomainEventPublisher
 {
-    Task PublishAllEventsInEventStore();
+    Task PublishEvents(IEnumerable<DomainEvent> events);
 }

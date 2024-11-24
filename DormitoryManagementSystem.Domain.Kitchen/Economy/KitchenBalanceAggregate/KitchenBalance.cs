@@ -34,7 +34,7 @@ public class KitchenBalance : Entity<KitchenBalanceId>
         Currency currency)
     {
         KitchenBalance newBalance = new KitchenBalance(id, name, kitchenId, participants, currency);
-        DomainEventStore.Raise(new KitchenBalanceCreatedEvent(newBalance.Id.Value, participants, currency.ToString()));
+        newBalance.Raise(new KitchenBalanceCreatedEvent(newBalance.Id.Value, participants, currency.ToString()));
         return newBalance;
     }
 

@@ -7,21 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Common\Persistence\**" />
-    <EmbeddedResource Remove="Common\Persistence\**" />
-    <None Remove="Common\Persistence\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DormitoryManagementSystem.Domain.AccountingContext\DormitoryManagementSystem.Domain.AccountingContext.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Domain.Clubs\DormitoryManagementSystem.Domain.ClubsContext.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Domain.Kitchen\DormitoryManagementSystem.Domain.KitchenContext.csproj" />
+    <ProjectReference Include="..\DormitoryManagementSystem.Domain.NotificationContext\DormitoryManagementSystem.Domain.NotificationContext.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Domain.SharedExpensesContext\DormitoryManagementSystem.Domain.SharedExpensesContext.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.35" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.0" />
     <PackageReference Include="Rebus" Version="8.7.0" />

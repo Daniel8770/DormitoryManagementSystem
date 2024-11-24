@@ -117,7 +117,10 @@ public class BookableResource : AggregateRoot<BookableResourceId>
             newBooking.Id.Value,
             newBooking.BookableResourceId.Value,
             newBooking.UnitId.Value,
-            newBooking.MemberId.Value));
+            units.Find(unit => unit.Id == newBooking.UnitId)!.Name.Value,  // already checked that unit exists
+            newBooking.MemberId.Value,
+            Name.Value,
+            newBooking.DateBooked));
     }
 
     private BookingId GetNextBookingId() =>

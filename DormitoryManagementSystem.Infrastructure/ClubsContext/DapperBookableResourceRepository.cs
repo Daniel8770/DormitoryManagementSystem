@@ -2,6 +2,7 @@
 using DormitoryManagementSystem.Domain.ClubsContext;
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 using DormitoryManagementSystem.Infrastructure.Common.DomainEvents;
+using DormitoryManagementSystem.Infrastructure.Common.Persistence;
 using Microsoft.Data.SqlClient;
 
 namespace DormitoryManagementSystem.Infrastructure.ClubsContext;

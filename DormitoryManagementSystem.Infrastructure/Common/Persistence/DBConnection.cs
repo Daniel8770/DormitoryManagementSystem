@@ -1,13 +1,14 @@
 ﻿using Dapper;
 using DormitoryManagementSystem.Domain.Common.DomainEvents;
 using DormitoryManagementSystem.Domain.Common.Entities;
+using DormitoryManagementSystem.Infrastructure.Common.DomainEvents;
 using Microsoft.Data.SqlClient;
 using Rebus.Bus;
 using Rebus.Config.Outbox;
 using Rebus.Transport;
 
 
-namespace DormitoryManagementSystem.Infrastructure.ClubsContext;
+namespace DormitoryManagementSystem.Infrastructure.Common.Persistence;
 
 public class DBConnection : IDisposable
 {
@@ -16,12 +17,12 @@ public class DBConnection : IDisposable
     private SqlTransaction? transaction;
     private RebusTransactionScope? rebusScope;
     private bool transactionStarted => transaction != null;
-    private IBus bus;
+    private IDomainEventPublisher domainEventPublisher;
 
-    public DBConnection(string connectionstring, IBus bus)
+    public DBConnection(string connectionstring, IDomainEventPublisher domainEventPublisher)
     {
         connection = new SqlConnection(connectionstring);
-        this.bus = bus;
+        this.domainEventPublisher = domainEventPublisher;
     }
 
     public async Task OpenConnectionAsync()
@@ -52,23 +53,10 @@ public class DBConnection : IDisposable
     public async Task CommitTransactionAndDisposeAsync(DomainEventRaiser entity)
     {
         ThrowIfTransactionNotStarted();
-        await PublishEvents(entity.DomainEvents);
-        await rebusScope!.CompleteAsync(); 
+        await domainEventPublisher.PublishEvents(entity.DomainEvents);
+        await rebusScope!.CompleteAsync();
         await transaction!.CommitAsync();
         await CloseTransactionAsync();
-    }
-    private async Task PublishAllEventsInEventStore()
-    {
-        await PublishEvents(DomainEventStore.Events);
-        DomainEventStore.ClearEventStore();
-    }
-
-    private async Task PublishEvents(IEnumerable<DomainEvent> events)
-    {
-        IEnumerable<Task> publishingTasks = events
-            .Select(domainEvent => bus.Publish(domainEvent));
-
-        await Task.WhenAll(publishingTasks);
     }
 
     public async Task RollbackTransactionAndDisposeAsync()
@@ -77,7 +65,7 @@ public class DBConnection : IDisposable
         await transaction!.RollbackAsync();
         await CloseTransactionAsync();
     }
-    public async Task<IEnumerable<dynamic>> QueryAsync(string query, object? parameters = null) => 
+    public async Task<IEnumerable<dynamic>> QueryAsync(string query, object? parameters = null) =>
         await QueryAsync<dynamic>(query, parameters);
 
     public async Task<IEnumerable<T>> QueryAsync<T>(string query, object? parameters = null)

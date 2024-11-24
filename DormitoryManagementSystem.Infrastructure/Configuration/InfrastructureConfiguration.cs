@@ -18,12 +18,12 @@ using DormitoryManagementSystem.Infrastructure.SharedExpensesContext;
 using DormitoryManagementSystem.Domain.AccountingContext.DomainEvents;
 using DormitoryManagementSystem.Domain.SharedExpensesContext.IntegrationMessages;
 using DormitoryManagementSystem.Infrastructure.ClubsContext;
-using Microsoft.EntityFrameworkCore;
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
-using DormitoryManagementSystem.Infrastructure.ClubsContext.EFCore;
 using Rebus.Config.Outbox;
 using DormitoryManagementSystem.Domain.ClubsContext.DomainEvents;
 using Rebus.Bus;
+using DormitoryManagementSystem.Infrastructure.Common.Persistence;
+using DormitoryManagementSystem.Domain.ClubsContext.IntegrationMessages;
 
 namespace DormitoryManagementSystem.Infrastructure.Configuration;
 public static class InfrastructureConfiguration
@@ -37,7 +37,6 @@ public static class InfrastructureConfiguration
         services.ConfigureRebus(GetOptions<RebusOptions>(infrastructureConfig, RebusOptions.SectionName));
 
         services.AddRepositories(infrastructureConfig);
-        services.AddInMemoryRepositories();
 
         return services;
     }
@@ -58,6 +57,7 @@ public static class InfrastructureConfiguration
                 .MapAssemblyNamespaceOf<DisposableAmountLowerLimitBreachedEvent>(options.InputQueue)
                 .MapAssemblyNamespaceOf<SharedExpenseBalancerCreatedMessage>(options.InputQueue)
                 .MapAssemblyNamespaceOf<ResourceBookedEvent>(options.InputQueue)
+                .MapAssemblyNamespaceOf<NotifyResourceBookedMessage>(options.InputQueue)
             );
             configure.Outbox(o => o.StoreInSqlServer(options.ConnectionString, options.OutboxTable));
             configure.Options(o =>
@@ -72,36 +72,25 @@ public static class InfrastructureConfiguration
         return services;
     }
 
-    public static IServiceCollection ConfigureEntityFramework(this IServiceCollection services, string connectionstring)
-    {
-        services.AddDbContext<ClubsDBContext>(options =>
-            options.UseSqlServer(connectionstring)
-        );
-        return services;
-    }
-
     public static IServiceCollection AddRepositories(this IServiceCollection services, IConfigurationSection infrastructureConfig)
     {
         string connectionstring = infrastructureConfig.GetConnectionString("Dapper")
             ?? throw new Exception("Could not load default connectionstring from appsettigns.");
 
         services.AddScoped<DBConnection>(serviceProvider =>
-            new DBConnection(connectionstring, serviceProvider.GetRequiredService<IBus>())
+            new DBConnection(connectionstring, serviceProvider.GetRequiredService<IDomainEventPublisher>())
         );
 
         services.AddScoped<IBookableResourceRepository, DapperBookableResourceRepository>(serviceProvider =>
             new DapperBookableResourceRepository(
                 connectionstring, 
                 serviceProvider.GetRequiredService<DBConnection>())
-        );    
-        return services;
-    }
+        );
 
-    public static IServiceCollection AddInMemoryRepositories(this IServiceCollection services)
-    {
         services.AddSingleton<IKitchenRepository, InMemoryKitchenRepository>();
         services.AddSingleton<IKitchenBalanceRepository, InMemoryKitchenBalanceRepository>();
         services.AddSingleton<ISharedExpensesBalancerRepository, InMemorySharedExpensesBalancerRepository>();
+
         return services;
     }
 

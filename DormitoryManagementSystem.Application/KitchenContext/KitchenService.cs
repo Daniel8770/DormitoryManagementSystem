@@ -39,7 +39,7 @@ public class KitchenService
 
         await kitchenBalanceRepository.Save(newKitchenBalance);
 
-        await domainEventPublisher.PublishAllEventsInEventStore();
+        await domainEventPublisher.PublishEvents(newKitchenBalance.DomainEvents);
 
         return newKitchenBalance;
     }

@@ -16,13 +16,7 @@ internal class RebusDomainEventPublisher : IDomainEventPublisher
         this.bus = bus;
     }
 
-    public async Task PublishAllEventsInEventStore()
-    {
-        await PublishEvents(DomainEventStore.Events);
-        DomainEventStore.ClearEventStore();
-    }
-
-    private async Task PublishEvents(IEnumerable<DomainEvent> events)
+    public async Task PublishEvents(IEnumerable<DomainEvent> events)
     {
         IEnumerable<Task> publishingTasks = events
             .Select(domainEvent => bus.Publish(domainEvent));
