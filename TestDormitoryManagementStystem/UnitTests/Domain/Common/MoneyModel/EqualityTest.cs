@@ -8,8 +8,8 @@ public class EqualityTest
     [Fact]
     public void Equality()
     {
-        Money money1 = new Money(100, Currency.DKK);
-        Money money2 = new Money(100, Currency.DKK);
+        Money money1 = Money.CreateNew(100, Currency.DKK);
+        Money money2 = Money.CreateNew(100, Currency.DKK);
 
         Assert.True(money1 == money2);
         Assert.True(money1.Equals(money2));
@@ -18,8 +18,8 @@ public class EqualityTest
     [Fact]
     public void BiggerThan()
     {
-        Money money1 = new Money(100, Currency.DKK);
-        Money money2 = new Money(200, Currency.DKK);
+        Money money1 = Money.CreateNew(100, Currency.DKK);
+        Money money2 = Money.CreateNew(200, Currency.DKK);
 
         Assert.True(money2 > money1);
     }
@@ -27,8 +27,8 @@ public class EqualityTest
     [Fact]
     public void LessThan()
     {
-        Money money1 = new Money(100, Currency.DKK);
-        Money money2 = new Money(200, Currency.DKK);
+        Money money1 = Money.CreateNew(100, Currency.DKK);
+        Money money2 = Money.CreateNew(200, Currency.DKK);
 
         Assert.True(money1 < money2);
     }

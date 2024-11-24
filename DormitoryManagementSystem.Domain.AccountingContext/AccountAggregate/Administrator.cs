@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate;
-public class Administrator : ValueObject
+public record Administrator : ValueObject
 {
 
 

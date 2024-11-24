@@ -3,13 +3,16 @@
 
 
 namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
-public class Participant : Entity
-{
-    public Guid Id { get; init; }
 
-    public Participant(Guid id)
+public record class ParticipantId(Guid Value) : EntityId<Guid>(Value)
+{
+    public static ParticipantId Next() => new(Guid.NewGuid());
+}
+
+public class Participant : Entity<ParticipantId>
+{
+    public Participant(ParticipantId id) : base(id)
     {
-        Id = id;
     }
 
     public static bool operator ==(Participant left, Participant right) =>

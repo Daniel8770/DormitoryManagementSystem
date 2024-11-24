@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entries;
 
-public abstract class Entry : Entity
+public abstract class Entry
 {
     public Money Amount { get; init; }
 

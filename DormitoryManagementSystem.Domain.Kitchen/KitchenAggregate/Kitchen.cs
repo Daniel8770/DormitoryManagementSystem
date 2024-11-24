@@ -1,5 +1,6 @@
 ﻿using DormitoryManagementSystem.Domain.Common.Aggregates;
 using DormitoryManagementSystem.Domain.Common.DomainEvents;
+using DormitoryManagementSystem.Domain.Common.Entities;
 using DormitoryManagementSystem.Domain.Common.Exceptions;
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using DormitoryManagementSystem.Domain.KitchenContext.DomainEvents;
@@ -9,9 +10,14 @@ using System.Collections.Immutable;
 
 namespace DormitoryManagementSystem.Domain.KitchenContext.KitchenAggregate;
 
-public class Kitchen : AggregateRoot
+
+public record KitchenId(Guid Value) : EntityId<Guid>(Value)
 {
-    public KitchenId Id { get; init; }
+    public static KitchenId Next() => new(Guid.NewGuid());
+}
+
+public class Kitchen : Entity<KitchenId>
+{
     public KitchenInformation Information { get; private set; }
     public KitchenAccountId? KitchenAccountId { get; private set; }
     public ImmutableList<Resident> Residents => residents.ToImmutableList();
@@ -20,15 +26,14 @@ public class Kitchen : AggregateRoot
 
     public static Kitchen CreateNew(string name) => new Kitchen(KitchenId.Next(), name);
 
-    private Kitchen(KitchenId id, string name)
+    private Kitchen(KitchenId id, string name) : base(id)
     {
-        Id = id;
         Information = KitchenInformation.Create(name);
     }
 
     private Kitchen(KitchenId id, string name, string description, string rules, KitchenAccountId? kitchenAccountId, IEnumerable<Resident> residents)
+        : base(id)
     {
-        Id = id;
         Information = KitchenInformation.CreateWithDescriptionAndRules(name, description, rules);
         KitchenAccountId = kitchenAccountId;
         this.residents = residents.ToList();

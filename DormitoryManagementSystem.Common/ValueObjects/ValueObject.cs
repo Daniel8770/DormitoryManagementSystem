@@ -1,5 +1,3 @@
 ﻿namespace DormitoryManagementSystem.Domain.Common.ValueObjects;
 
-public abstract class ValueObject
-{
-}
+public abstract record ValueObject;

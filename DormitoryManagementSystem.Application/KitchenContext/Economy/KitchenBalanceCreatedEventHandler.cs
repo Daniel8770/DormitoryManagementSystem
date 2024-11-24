@@ -24,7 +24,7 @@ public class KitchenBalanceCreatedEventHandler : IHandleMessages<KitchenBalanceC
     {
         await bus.Send(new CreateSharedExpenseBalancerMessage(
             message.KitchenBalanceId,
-            message.Participants.Select(p => new Participant(p)),
+            message.Participants.Select(p => new Participant(new ParticipantId(p.Value))),
             message.Currency));
     }
 

@@ -20,7 +20,7 @@ public class RoundingTest
     [InlineData(70.320483242342342343243243242342, 70.32)]
     public void GetRoundedValue_ShouldRoundAccordingToBankersRounding(decimal amount, decimal rounded)
     {
-        Money money = new(amount, Currency.DKK);
+        Money money = Money.CreateNew(amount, Currency.DKK);
         money.GetRoundedValue().Should().Be(rounded);
     }
 }

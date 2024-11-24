@@ -17,21 +17,26 @@ using DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalan
 using DormitoryManagementSystem.Infrastructure.SharedExpensesContext;
 using DormitoryManagementSystem.Domain.AccountingContext.DomainEvents;
 using DormitoryManagementSystem.Domain.SharedExpensesContext.IntegrationMessages;
+using DormitoryManagementSystem.Infrastructure.ClubsContext;
+using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
+using Rebus.Config.Outbox;
+using DormitoryManagementSystem.Domain.ClubsContext.DomainEvents;
+using Rebus.Bus;
+using DormitoryManagementSystem.Infrastructure.Common.Persistence;
+using DormitoryManagementSystem.Domain.ClubsContext.IntegrationMessages;
 
 namespace DormitoryManagementSystem.Infrastructure.Configuration;
 public static class InfrastructureConfiguration
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfigurationSection infraStructureConfig)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfigurationSection infrastructureConfig)
     {
-        services.AddSingleton<DomainEventPublisher, RebusDomainEventPublisher>();
+        services.AddScoped<IDomainEventPublisher, RebusDomainEventPublisher>();
         services.AddSingleton<IDomainEventSubscriber, RebusDomainEventSubscriber>();
 
-        services.Configure<RebusOptions>(infraStructureConfig.GetRequiredSection(RebusOptions.SectionName));
-        services.ConfigureRebus(GetOptions<RebusOptions>(infraStructureConfig, RebusOptions.SectionName));
+        services.Configure<RebusOptions>(infrastructureConfig.GetRequiredSection(RebusOptions.SectionName));
+        services.ConfigureRebus(GetOptions<RebusOptions>(infrastructureConfig, RebusOptions.SectionName));
 
-        services.ConfigureEntityFramework();
-
-        services.AddInMemoryRepositories();
+        services.AddRepositories(infrastructureConfig);
 
         return services;
     }
@@ -51,7 +56,10 @@ public static class InfrastructureConfiguration
                 .MapAssemblyNamespaceOf<CreateSharedExpenseBalancerMessage>(options.InputQueue)
                 .MapAssemblyNamespaceOf<DisposableAmountLowerLimitBreachedEvent>(options.InputQueue)
                 .MapAssemblyNamespaceOf<SharedExpenseBalancerCreatedMessage>(options.InputQueue)
+                .MapAssemblyNamespaceOf<ResourceBookedEvent>(options.InputQueue)
+                .MapAssemblyNamespaceOf<NotifyResourceBookedMessage>(options.InputQueue)
             );
+            configure.Outbox(o => o.StoreInSqlServer(options.ConnectionString, options.OutboxTable));
             configure.Options(o =>
             {
                 o.RetryStrategy(errorQueueName: options.ErrorQueue, maxDeliveryAttempts: options.MaxDeliveryAttempts);
@@ -64,21 +72,25 @@ public static class InfrastructureConfiguration
         return services;
     }
 
-    public static IServiceCollection ConfigureEntityFramework(this IServiceCollection services)
+    public static IServiceCollection AddRepositories(this IServiceCollection services, IConfigurationSection infrastructureConfig)
     {
-        return services;
-    }
+        string connectionstring = infrastructureConfig.GetConnectionString("Dapper")
+            ?? throw new Exception("Could not load default connectionstring from appsettigns.");
 
-    public static IServiceCollection AddRepositories(this IServiceCollection services)
-    {
-        return services;
-    }
+        services.AddScoped<DBConnection>(serviceProvider =>
+            new DBConnection(connectionstring, serviceProvider.GetRequiredService<IDomainEventPublisher>())
+        );
 
-    public static IServiceCollection AddInMemoryRepositories(this IServiceCollection services)
-    {
+        services.AddScoped<IBookableResourceRepository, DapperBookableResourceRepository>(serviceProvider =>
+            new DapperBookableResourceRepository(
+                connectionstring, 
+                serviceProvider.GetRequiredService<DBConnection>())
+        );
+
         services.AddSingleton<IKitchenRepository, InMemoryKitchenRepository>();
         services.AddSingleton<IKitchenBalanceRepository, InMemoryKitchenBalanceRepository>();
         services.AddSingleton<ISharedExpensesBalancerRepository, InMemorySharedExpensesBalancerRepository>();
+
         return services;
     }
 

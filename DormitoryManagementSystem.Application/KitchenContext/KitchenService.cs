@@ -11,9 +11,9 @@ public class KitchenService
 {
     IKitchenRepository kitchenRepository;
     IKitchenBalanceRepository kitchenBalanceRepository;
-    DomainEventPublisher domainEventPublisher;
+    IDomainEventPublisher domainEventPublisher;
 
-    public KitchenService(IKitchenRepository kitchenRepository, IKitchenBalanceRepository kitchenBalanceRepository, DomainEventPublisher domainEventPublisher)
+    public KitchenService(IKitchenRepository kitchenRepository, IKitchenBalanceRepository kitchenBalanceRepository, IDomainEventPublisher domainEventPublisher)
     {
         this.kitchenRepository = kitchenRepository;
         this.kitchenBalanceRepository = kitchenBalanceRepository;
@@ -39,7 +39,7 @@ public class KitchenService
 
         await kitchenBalanceRepository.Save(newKitchenBalance);
 
-        await domainEventPublisher.PublishAllEventsInEventStore();
+        await domainEventPublisher.PublishEvents(newKitchenBalance.DomainEvents);
 
         return newKitchenBalance;
     }

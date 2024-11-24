@@ -3,14 +3,19 @@ using DormitoryManagementSystem.Domain.AccountingContext.AccountAggregate.Entrie
 using DormitoryManagementSystem.Domain.AccountingContext.DomainEvents;
 using DormitoryManagementSystem.Domain.Common.Aggregates;
 using DormitoryManagementSystem.Domain.Common.DomainEvents;
+using DormitoryManagementSystem.Domain.Common.Entities;
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using System.Collections.Immutable;
 
 namespace DormitoryManagementSystem.Domain.Common.Accounting;
 
-public class Account : AggregateRoot
+public record AccountId(Guid Value) : EntityId<Guid>(Value)
 {
-    public AccountId Id { get; init; }
+    public static AccountId Next() => new AccountId(Guid.NewGuid());
+}
+
+public class Account : AggregateRoot<AccountId>
+{
     public BankInformation BankInformation { get; private set; }
     public Administrator Administrator { get; private set; }
     public ImmutableList<Entry> Entries { get => entries.Entries; }
@@ -22,8 +27,8 @@ public class Account : AggregateRoot
         : this(id, bankInformation, administrator, EntryList.NewEmpty()) { }
 
     private Account(AccountId id, BankInformation bankInformation, Administrator administrator, EntryList entries)
+        : base(id)
     {
-        Id = id;
         BankInformation = bankInformation;
         Administrator = administrator;
 
@@ -89,7 +94,7 @@ public class Account : AggregateRoot
         return entries.Entries
             .Where(e => e is Deposit || e is Withdrawal)
             .Select(e => e.GetRelativeAmount())
-            .Aggregate((acc, m) => acc + m);
+            .Sum();
     }
 
     public Money GetTotalCredit()
@@ -97,7 +102,7 @@ public class Account : AggregateRoot
         return entries.Entries
             .Where(e => e is Credit)
             .Select(e => e.Amount)
-            .Aggregate((m1, m2) => m1 + m2);
+            .Sum();
     }
 
     public Money GetTotalDebit()
@@ -105,7 +110,7 @@ public class Account : AggregateRoot
         return entries.Entries
             .Where(e => e is Debit)
             .Select(e => e.Amount)
-            .Aggregate((m1, m2) => m1 + m2);
+            .Sum();
     }
 
     private void RaiseIfDispoableAmountLowerLimitBreached(Money disposableBefore, Money disposableAfter)

@@ -1,12 +1,14 @@
 ﻿using DormitoryManagementSystem.Domain.Common.DomainEvents;
 using DormitoryManagementSystem.Infrastructure.Common.DomainEvents;
+using Microsoft.Data.SqlClient;
 using Rebus.Bus;
+using Rebus.Config.Outbox;
+using Rebus.Transport;
+using System.Data.Common;
 
 namespace DormitoryManagementSystem.Infrastructure.Common.DomainEvents.Rebus;
-public class RebusDomainEventPublisher : DomainEventPublisher
+internal class RebusDomainEventPublisher : IDomainEventPublisher
 {
-    // TODO: Rebus Outbox pattern should be used, therefore this class should have reference to database transaction
-
     private IBus bus;
 
     public RebusDomainEventPublisher(IBus bus)
@@ -14,8 +16,11 @@ public class RebusDomainEventPublisher : DomainEventPublisher
         this.bus = bus;
     }
 
-    protected override async Task Publish(DomainEvent domainEvent)
+    public async Task PublishEvents(IEnumerable<DomainEvent> events)
     {
-        await bus.Publish(domainEvent);
+        IEnumerable<Task> publishingTasks = events
+            .Select(domainEvent => bus.Publish(domainEvent));
+
+        await Task.WhenAll(publishingTasks);
     }
 }

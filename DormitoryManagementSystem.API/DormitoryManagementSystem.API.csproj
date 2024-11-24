@@ -20,8 +20,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DormitoryManagementSystem.Application\DormitoryManagementSystem.Application.csproj" />
+    <ProjectReference Include="..\DormitoryManagementSystem.Domain.Clubs\DormitoryManagementSystem.Domain.ClubsContext.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Domain.Kitchen\DormitoryManagementSystem.Domain.KitchenContext.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Infrastructure\DormitoryManagementSystem.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Middlewares\" />
   </ItemGroup>
 
 </Project>

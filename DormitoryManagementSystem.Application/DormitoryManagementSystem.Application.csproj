@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DormitoryManagementSystem.Common\DormitoryManagementSystem.Domain.Common.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Domain.AccountingContext\DormitoryManagementSystem.Domain.AccountingContext.csproj" />
+    <ProjectReference Include="..\DormitoryManagementSystem.Domain.Clubs\DormitoryManagementSystem.Domain.ClubsContext.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Domain.NotificationContext\DormitoryManagementSystem.Domain.NotificationContext.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Domain.SharedExpensesContext\DormitoryManagementSystem.Domain.SharedExpensesContext.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Infrastructure\DormitoryManagementSystem.Infrastructure.csproj" />

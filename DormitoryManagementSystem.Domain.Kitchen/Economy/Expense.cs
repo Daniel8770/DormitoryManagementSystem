@@ -7,9 +7,14 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DormitoryManagementSystem.Domain.KitchenContext.Economy;
-public abstract class Expense : Entity
+
+public record ExpenseId(Guid Value) : EntityId<Guid>(Value)
 {
-    public ExpenseId Id { get; init; }
+    public static ExpenseId Next() => new(Guid.NewGuid());
+}
+
+public abstract class Expense : Entity<ExpenseId>
+{
     public string Title { get; private set; }
     public string Description { get; private set; }
     public Money Amount { get; private set; }
@@ -26,9 +31,8 @@ public abstract class Expense : Entity
         DateTime dateCreated,
         ResidentId creator,
         ResidentId creditor,
-        List<ResidentId> debtors)
+        List<ResidentId> debtors) : base(id)
     {
-        Id = id;
         Title = title;
         Description = description;
         Amount = amount;

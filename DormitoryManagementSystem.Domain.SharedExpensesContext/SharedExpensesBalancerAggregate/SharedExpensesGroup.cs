@@ -1,13 +1,18 @@
 ﻿using DormitoryManagementSystem.Domain.Common.Aggregates;
+using DormitoryManagementSystem.Domain.Common.Entities;
 using DormitoryManagementSystem.Domain.Common.Exceptions;
 using DormitoryManagementSystem.Domain.Common.MoneyModel;
 using DormitoryManagementSystem.Domain.SharedExpensesContext.MinimumTransactionDebtSettlementAlgorithm;
 
 namespace DormitoryManagementSystem.Domain.SharedExpensesContext.SharedExpensesBalancerAggregate;
 
-public class SharedExpensesGroup : AggregateRoot
+public record SharedExpensesGroupId(Guid Value) : EntityId<Guid>(Value)
 {
-    public SharedExpensesGroupId Id { get; init; }
+    public static SharedExpensesGroupId Next() => new(Guid.NewGuid());
+}
+
+public class SharedExpensesGroup : Entity<SharedExpensesGroupId>
+{
     public Currency Currency { get; private set; }
 
     private List<Participant> participants;
@@ -32,8 +37,8 @@ public class SharedExpensesGroup : AggregateRoot
         Currency currency,
         List<Participant> participants,
         IMinimumTransactionDebtSettler debtSettler)
+        : base(id)
     {
-        Id = id;
         Currency = currency;
         this.participants = participants;
         this.debtSettler = debtSettler;
@@ -44,7 +49,7 @@ public class SharedExpensesGroup : AggregateRoot
         AssertCorrectness(amount, creditor, debtors);
 
         Expense newExpense = new(
-            Guid.NewGuid(),
+            ExpenseId.Next(),
             amount,
             creditor,
             debtors);
@@ -75,7 +80,7 @@ public class SharedExpensesGroup : AggregateRoot
 
         foreach (var debtor in expense.Debtors)
         {
-            debts.Add(new(Guid.NewGuid(), expense.Id, debtor, pricePerDebtor));
+            debts.Add(new(expense.Id, debtor.Id, pricePerDebtor));
         }
     }
 
@@ -95,7 +100,7 @@ public class SharedExpensesGroup : AggregateRoot
     public Money GetTotalDebtOf(Participant participant)
     {
         AssertParticipation(participant);
-        return debts.Where(d => d.Debtor == participant)
+        return debts.Where(d => d.Debtor == participant.Id)
             .Select(e => e.Amount)
             .Aggregate((a, b) => a + b);
     }
@@ -110,9 +115,7 @@ public class SharedExpensesGroup : AggregateRoot
 
     public List<Participant> GetDebtorsOf(Participant creditor)
     {
-        //AssertParticipation(creditor);
-        //return debtSettler.GetDebtorsOf(creditor);
-        throw new NotImplementedException();    // TODO
+        throw new NotImplementedException();  
     }
 
     private void AssertParticipation(Participant creditor)
