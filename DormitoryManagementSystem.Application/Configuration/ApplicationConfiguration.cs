@@ -14,6 +14,7 @@ public static class ApplicationConfiguration
         services.AddScoped<KitchenService>();
         services.AddScoped<BookableResourceService>();
         services.AutoRegisterHandlersFromAssemblyOf<KitchenAccountCreatedEventHandler>();
+        services.AutoRegisterHandlersFromAssemblyOf<ResourceBookedEventHandler>();
         return services;
     }
 }

@@ -22,6 +22,8 @@ using Microsoft.EntityFrameworkCore;
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 using DormitoryManagementSystem.Infrastructure.ClubsContext.EFCore;
 using Rebus.Config.Outbox;
+using DormitoryManagementSystem.Domain.ClubsContext.DomainEvents;
+using Rebus.Bus;
 
 namespace DormitoryManagementSystem.Infrastructure.Configuration;
 public static class InfrastructureConfiguration
@@ -55,6 +57,7 @@ public static class InfrastructureConfiguration
                 .MapAssemblyNamespaceOf<CreateSharedExpenseBalancerMessage>(options.InputQueue)
                 .MapAssemblyNamespaceOf<DisposableAmountLowerLimitBreachedEvent>(options.InputQueue)
                 .MapAssemblyNamespaceOf<SharedExpenseBalancerCreatedMessage>(options.InputQueue)
+                .MapAssemblyNamespaceOf<ResourceBookedEvent>(options.InputQueue)
             );
             configure.Outbox(o => o.StoreInSqlServer(options.ConnectionString, options.OutboxTable));
             configure.Options(o =>
@@ -82,10 +85,14 @@ public static class InfrastructureConfiguration
         string connectionstring = infrastructureConfig.GetConnectionString("Dapper")
             ?? throw new Exception("Could not load default connectionstring from appsettigns.");
 
+        services.AddScoped<DBConnection>(serviceProvider =>
+            new DBConnection(connectionstring, serviceProvider.GetRequiredService<IBus>())
+        );
+
         services.AddScoped<IBookableResourceRepository, DapperBookableResourceRepository>(serviceProvider =>
             new DapperBookableResourceRepository(
                 connectionstring, 
-                serviceProvider.GetRequiredService<IDomainEventPublisher>())
+                serviceProvider.GetRequiredService<DBConnection>())
         );    
         return services;
     }

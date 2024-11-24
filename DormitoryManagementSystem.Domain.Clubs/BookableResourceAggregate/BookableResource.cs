@@ -1,4 +1,5 @@
-﻿using DormitoryManagementSystem.Domain.Common.Aggregates;
+﻿using DormitoryManagementSystem.Domain.ClubsContext.DomainEvents;
+using DormitoryManagementSystem.Domain.Common.Aggregates;
 using DormitoryManagementSystem.Domain.Common.DomainEvents;
 using DormitoryManagementSystem.Domain.Common.Entities;
 using DormitoryManagementSystem.Domain.Common.Exceptions;
@@ -111,6 +112,12 @@ public class BookableResource : AggregateRoot<BookableResourceId>
                 $"{((MaxBookingsPerMemberRules)Rules).MaxBookingsPerMember}.");
 
         bookings.Add(newBooking);
+
+        Raise(new ResourceBookedEvent(
+            newBooking.Id.Value,
+            newBooking.BookableResourceId.Value,
+            newBooking.UnitId.Value,
+            newBooking.MemberId.Value));
     }
 
     private BookingId GetNextBookingId() =>

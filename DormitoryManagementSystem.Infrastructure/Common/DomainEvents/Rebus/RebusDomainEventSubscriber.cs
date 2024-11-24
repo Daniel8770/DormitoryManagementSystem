@@ -1,4 +1,5 @@
 ﻿using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
+using DormitoryManagementSystem.Domain.ClubsContext.DomainEvents;
 using DormitoryManagementSystem.Domain.KitchenContext.DomainEvents;
 using DormitoryManagementSystem.Domain.KitchenContext.IntegrationMessages;
 using DormitoryManagementSystem.Domain.SharedExpensesContext.IntegrationMessages;
@@ -29,9 +30,11 @@ public class RebusDomainEventSubscriber : IDomainEventSubscriber
         Task kitchenBalanceCreatedEventSubscription = bus.Subscribe<KitchenBalanceCreatedEvent>();
         Task createSharedExpenseBalancerMessageSubscription = bus.Subscribe<CreateSharedExpenseBalancerMessage>();
         Task sharedExpenseBalancerCreatedMessageSubscription = bus.Subscribe<SharedExpenseBalancerCreatedMessage>();
+        Task resourceBookedEventSubscription = bus.Subscribe<ResourceBookedEvent>();
 
         await kitchenBalanceCreatedEventSubscription;
         await createSharedExpenseBalancerMessageSubscription;
         await sharedExpenseBalancerCreatedMessageSubscription;
+        await resourceBookedEventSubscription;
     }
 }

@@ -1,8 +1,20 @@
-﻿namespace DormitoryManagementSystem.Domain.Common.Entities;
+﻿using DormitoryManagementSystem.Domain.Common.DomainEvents;
 
-public abstract class Entity<TIdentity> where TIdentity : EntityId
+namespace DormitoryManagementSystem.Domain.Common.Entities;
+
+public abstract class DomainEventRaiser
+{
+    private List<DomainEvent> domainEvents = new();
+    public IEnumerable<DomainEvent> DomainEvents => domainEvents;
+    public void Raise(DomainEvent domainEvent) =>
+        domainEvents.Add(domainEvent);
+}
+
+public abstract class Entity<TIdentity> : DomainEventRaiser 
+    where TIdentity : EntityId
 {
     public TIdentity Id { get; init; }
+    
 
     public Entity(TIdentity id)
     {

@@ -9,18 +9,17 @@ namespace DormitoryManagementSystem.Infrastructure.ClubsContext;
 public class DapperBookableResourceRepository : IBookableResourceRepository
 {
     private string connectionString;
-    private IDomainEventPublisher domainEventPublisher;
+    private DBConnection connection;
 
-    public DapperBookableResourceRepository(string connectionString, IDomainEventPublisher domainEventPublisher)
+    public DapperBookableResourceRepository(string connectionString, DBConnection dbConnection)
     {
         this.connectionString = connectionString;
-        this.domainEventPublisher = domainEventPublisher;
+        this.connection = dbConnection;
     }
 
     public async Task<BookableResource?> GetById(BookableResourceId id)
     {
-        using var connection = new SqlConnection(connectionString);
-        connection.Open();
+        await connection.OpenConnectionAsync();
         
         string bookableResourseQuery = "SELECT * FROM [Clubs].[BookableResource] WHERE Id = @bookableResourceId";
         string unitsQuery = "SELECT * FROM [Clubs].[Unit] where [BookableResourceId] = @bookableResourceId";
@@ -64,10 +63,8 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
 
     public async Task Save(BookableResource bookableResource)
     {
-        using SqlConnection connection = new SqlConnection(connectionString);
-        await connection.OpenAsync();
-        using SqlTransaction transaction = connection.BeginTransaction();
-        domainEventPublisher.SetTransaction(transaction);
+        await connection.OpenConnectionAsync();
+        await connection.BeginTransactionAsync();
 
         string insertBookableResource = 
             @"INSERT INTO [Clubs].[BookableResource] 
@@ -84,7 +81,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
 
         try
         {
-            await connection.ExecuteAsync(insertBookableResource, transaction: transaction, param: new
+            await connection.ExecuteAsync(insertBookableResource, parameters: new
             {
                 Id = bookableResource.Id.Value,
                 Name = bookableResource.Name.Value,
@@ -96,7 +93,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
             });
 
             await Task.WhenAll(bookableResource.Units.Select(unit =>
-                connection.ExecuteAsync(insertUnit, transaction: transaction, param: new
+                connection.ExecuteAsync(insertUnit, parameters: new
                 {
                     Id = unit.Id.Value,
                     Name = unit.Name,
@@ -105,7 +102,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
             ));
 
             await Task.WhenAll(bookableResource.Bookings.Select(booking =>
-                connection.ExecuteAsync(insertBooking, transaction: transaction, param: new
+                connection.ExecuteAsync(insertBooking, parameters: new
                 {
                     Id = booking.Id.Value,
                     MemberId = booking.MemberId.Value,
@@ -116,23 +113,20 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                     DateBooked = booking.DateBooked
                 })
             ));
-
-            await domainEventPublisher.PublishAllEventsInEventStore();
-            await transaction.CommitAsync();
+            
+            await connection.CommitTransactionAndDisposeAsync(bookableResource);
         }
         catch (Exception)
         {
-            await transaction.RollbackAsync();
+            await connection.RollbackTransactionAndDisposeAsync();
             throw;
         }
     }
 
     public async Task Update(BookableResource bookableResource)
     {
-        using SqlConnection connection = new SqlConnection(connectionString);
-        await connection.OpenAsync();
-        using SqlTransaction transaction = connection.BeginTransaction();
-        domainEventPublisher.SetTransaction(transaction);
+        await connection.OpenConnectionAsync();
+        await connection.BeginTransactionAsync();
 
         string updateBookableResource =
             @"UPDATE [Clubs].[BookableResource] SET
@@ -171,7 +165,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
 
         try
         {
-            await connection.ExecuteAsync(updateBookableResource, transaction: transaction, param: new
+            await connection.ExecuteAsync(updateBookableResource, parameters: new
             {
                 Id = bookableResource.Id.Value,
                 Name = bookableResource.Name.Value,
@@ -183,7 +177,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
             });
 
             await Task.WhenAll(bookableResource.Units.Select(unit =>
-                connection.ExecuteAsync(updateUnit, transaction: transaction, param: new
+                connection.ExecuteAsync(updateUnit, parameters: new
                 {
                     Id = unit.Id.Value,
                     Name = unit.Name.Value,
@@ -192,7 +186,7 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
             ));
 
             await Task.WhenAll(bookableResource.Bookings.Select(booking =>
-                connection.ExecuteAsync(updateBooking, transaction: transaction, param: new
+                connection.ExecuteAsync(updateBooking, parameters: new
                 {
                     Id = booking.Id.Value,
                     MemberId = booking.MemberId.Value,
@@ -208,12 +202,11 @@ public class DapperBookableResourceRepository : IBookableResourceRepository
                 })
             ));
 
-            await domainEventPublisher.PublishAllEventsInEventStore();
-            await transaction.CommitAsync();
+            await connection.CommitTransactionAndDisposeAsync(bookableResource);
         }
         catch (Exception)
         {
-            await transaction.RollbackAsync();
+            await connection.RollbackTransactionAndDisposeAsync();
             throw;
         }
     }
