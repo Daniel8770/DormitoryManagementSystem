@@ -115,9 +115,7 @@ public class SharedExpensesGroup : Entity<SharedExpensesGroupId>
 
     public List<Participant> GetDebtorsOf(Participant creditor)
     {
-        //AssertParticipation(creditor);
-        //return debtSettler.GetDebtorsOf(creditor);
-        throw new NotImplementedException();    // TODO
+        throw new NotImplementedException();  
     }
 
     private void AssertParticipation(Participant creditor)
