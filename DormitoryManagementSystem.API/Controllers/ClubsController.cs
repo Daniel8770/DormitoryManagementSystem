@@ -29,7 +29,7 @@ public class ClubsController : Controller
 
     [HttpPut]
     [Route("api/clubs/{clubId}/bookableResources/{bookableResourceId}/addUnit")]
-    public async Task<IActionResult> AddUnitToBookableResource(Guid clubId, Guid bookableResourceId, AddUnitToBookableResourceRequest request)
+    public async Task<IActionResult> AddUnitToBookableResource(Guid clubId, Guid bookableResourceId, [FromBody] AddUnitToBookableResourceRequest request)
     {
         BookableResource? updatedResource = await bookableResourceService
             .AddUnit(new BookableResourceId(bookableResourceId), request.UnitName);
@@ -42,7 +42,7 @@ public class ClubsController : Controller
 
     [HttpPost]
     [Route("api/clubs/{clubId}/bookableResources")]
-    public async Task<IActionResult> CreateNewBookableResource(CreateNewBookableResourceRequest request)
+    public async Task<IActionResult> CreateNewBookableResource([FromBody] CreateNewBookableResourceRequest request)
     {
         BookableResource newResource = await bookableResourceService.CreateNewBookableResource(
             request.Name,
@@ -55,7 +55,7 @@ public class ClubsController : Controller
 
     [HttpPut]
     [Route("api/clubs/{clubId}/bookableResources/{bookableResourceId}/bookDays")]
-    public async Task<IActionResult> BookDays(Guid clubId, Guid bookableResourceId, BookDaysRequest request)
+    public async Task<IActionResult> BookDays(Guid clubId, Guid bookableResourceId, [FromBody] BookDaysRequest request)
     {
         BookableResource? updatedResource = await bookableResourceService.BookDays(
             new BookableResourceId(bookableResourceId),
