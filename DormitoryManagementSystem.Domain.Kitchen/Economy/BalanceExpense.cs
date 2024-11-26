@@ -24,7 +24,7 @@ public class BalanceExpense : Expense
             creditor,
             debtors);
 
-        DomainEventStore.Raise(new NewBalanceExpenseCreatedEvent(newExpense));
+        newExpense.Raise(new NewBalanceExpenseCreatedEvent(newExpense));
 
         return newExpense;
     }

@@ -1,13 +1,9 @@
 ﻿using DormitoryManagementSystem.Domain.Common.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DormitoryManagementSystem.Domain.Common.ValueObjects;
 
 namespace DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 
-public record Name
+public record Name : ValueObject
 {
     public string Value { get; init; }
 
@@ -31,5 +27,5 @@ public record Name
         && !char.IsDigit(name.First());
 
     private DomainException NewInvalidNameException(string name) =>
-        new DomainException($"Name '{name}' is not valid");
+        new DomainException($"Name '{name}' is not valid.");
 }

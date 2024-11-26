@@ -119,7 +119,7 @@ public class Account : AggregateRoot<AccountId>
             return;
 
         if (disposableBefore.Value >= disposableAmountLowerLimit && disposableAfter.Value < disposableAmountLowerLimit)
-            DomainEventStore.Raise(new DisposableAmountLowerLimitBreachedEvent(
+            Raise(new DisposableAmountLowerLimitBreachedEvent(
                 Id,
                 disposableAmountLowerLimit ?? 0,
                 disposableAfter)
