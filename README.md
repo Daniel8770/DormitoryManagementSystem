@@ -17,8 +17,8 @@ To run the application follow these steps:
 
 1. Clone the repository from the `master` branch
 2. Download [Microsoft SQL Server Management Studio](https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms?view=sql-server-ver16)
-3. Open a local server and create a  database called `DormitoryManagementSystemCloud01`
-4. Open the SQL script called `create_clubs_schema.sql` from the `SQL` folder in SQL server Management Studio and run it on this database
+3. Using SQL Server Management Studio, open a local server and create a  database called `DormitoryManagementSystemCloud01`
+4. Open the SQL script called `create_clubs_schema.sql` from the `SQL` folder in SQL Server Management Studio and run it on this database
 5. Download the [Visual Studio IDE](https://visualstudio.microsoft.com/)
 6. Make sure you have installed the [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/visual-studio-sdks)
 7. Open the solution file `DormitoryManagementSystem.sln` of the C# solution in Visual Studio
