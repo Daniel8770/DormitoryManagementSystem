@@ -23,7 +23,7 @@ To run the application follow these steps:
 6. Make sure you have installed the [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/visual-studio-sdks)
 7. Open the solution file `DormitoryManagementSystem.sln` of the C# solution in Visual Studio
 8. Make sure the connection strings in `DormitoryManagementSystem.API/appsettings.Development.json` has the right server name and database name, corresponding to the database you just made
-9. Run the application in Debug mode
+9. Run the application in `Debug` mode
 10. This will open a browser with a basic UI, provided by [Swagger](https://swagger.io/), that allows you to try the different endpoints of the API. The ones that are fully implemented with persistence is the `Clubs` endpoints.
 
 
