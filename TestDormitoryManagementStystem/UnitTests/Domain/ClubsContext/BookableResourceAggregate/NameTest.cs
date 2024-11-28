@@ -3,7 +3,7 @@ using DormitoryManagementSystem.Domain.Common.Exceptions;
 
 
 namespace TestDormitoryManagementStystem.UnitTests.Domain.ClubsContext.BookableResourceAggregate;
-public class UnitEntityTests
+public class NameTest
 {
     private UnitId unitId = new(1);
 

@@ -1,6 +1,7 @@
 ﻿using DormitoryManagementSystem.Domain.ClubsContext;
 using DormitoryManagementSystem.Domain.ClubsContext.BookableResourceAggregate;
 using DormitoryManagementSystem.Domain.Common.Exceptions;
+using FluentAssertions;
 
 
 namespace TestDormitoryManagementStystem.UnitTests.Domain.ClubsContext.BookableResourceAggregate;
@@ -13,7 +14,7 @@ public class BookableResourceAggregateTest
     {
         bookableResource = BookableResource.CreateNewWithMaximumBookingsPerMember(
             "Resource 1",
-            "These is very important information about the rules of booking this resource.",
+            "These are very important information about the rules of booking this resource.",
             3,
             DateTime.Now.AddDays(-7),
             DateTime.Now.AddDays(7)
@@ -25,7 +26,7 @@ public class BookableResourceAggregateTest
     {
         Assert.True(bookableResource.Id.Value != Guid.Empty);
         Assert.Equal("Resource 1", bookableResource.Name.Value);
-        Assert.Equal("These is very important information about the rules of booking this resource.", bookableResource.Rules.Information);
+        Assert.Equal("These are very important information about the rules of booking this resource.", bookableResource.Rules.Information);
         Assert.Equal(3, ((MaxBookingsPerMemberRules)bookableResource.Rules).MaxBookingsPerMember);
         Assert.Equal(DateTime.Now.AddDays(-7).Date, bookableResource.OpenDate.Date);
         Assert.Equal(DateTime.Now.AddDays(7).Date, bookableResource.EndDate.Date);
@@ -56,6 +57,45 @@ public class BookableResourceAggregateTest
                 Assert.Equal("Unit 2", unit.Name.Value);
                 Assert.Equal(2, unit.Id.Value);
             });
+    }
+
+    [Fact]
+    public void RemoveUnit()
+    {
+        bookableResource.AddUnit("Unit 1");
+        bookableResource.AddUnit("Unit 2");
+
+        Assert.True(bookableResource.Units.Count == 2);
+
+        bookableResource.RemoveUnit(new(1));
+
+        Assert.True(bookableResource.Units.Count == 1);
+    }
+
+    [Fact]
+    public void RemoveUnit_WhenNoUnits_NothingShouldHappen()
+    {
+        bookableResource.RemoveUnit(new(1));
+    }
+
+    [Fact]
+    public void IsAvailable_WhenNowIsBetweenOpenAndEndDate_ShouldReturnTrue()
+    {
+        bookableResource.IsAvailable().Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsAvailable_WhenNowIsNotBetweenOpenAndEndDate_ShouldReturnFalse()
+    {
+        BookableResource br = BookableResource.CreateNewWithMaximumBookingsPerMember(
+            "Resource 1",
+            "These are very important information about the rules of booking this resource.",
+            3,
+            DateTime.Now.AddDays(7),
+            DateTime.Now.AddDays(10)
+        );
+
+        br.IsAvailable().Should().BeFalse();
     }
 
     [Fact]
@@ -254,7 +294,8 @@ public class BookableResourceAggregateTest
         bookableResource.BookHours(memberId, unitId, date.AddHours(4), nHours);
         bookableResource.BookHours(memberId, unitId, date.AddHours(7), nHours);
 
-        Assert.Throws<DomainException>(() => bookableResource.BookHours(memberId, unitId, date.AddHours(10), nHours));
+        Assert.Throws<DomainException>(() => 
+            bookableResource.BookHours(memberId, unitId, date.AddHours(10), nHours));
     }
 
     [Fact]
@@ -265,7 +306,7 @@ public class BookableResourceAggregateTest
         bookableResource.AddUnit("Unit 3");
         bookableResource.AddUnit("Unit 4");
         bookableResource.AddUnit("Unit 5");
-
+        
         MemberId memberId1 = MemberId.Next();
         MemberId memberId2 = MemberId.Next();
         MemberId memberId3 = MemberId.Next();
@@ -281,14 +322,89 @@ public class BookableResourceAggregateTest
         Assert.Equal(2, bookableUnits.Count());
         Assert.Collection(bookableUnits,
             unit =>
-            {
-                Assert.Equal("Unit 4", unit.Name.Value);
-            },
+                unit.Name.Value.Should().Be("Unit 4"),
             unit =>
-            {
-                Assert.Equal("Unit 5", unit.Name.Value);
-            }
+                unit.Name.Value.Should().Be("Unit 5")
         );
     }
-    
+
+    [Fact]
+    public void GetNonExpiredBookings()
+    {
+        bookableResource.AddUnit("Unit 1");
+        bookableResource.AddUnit("Unit 2");
+        bookableResource.AddUnit("Unit 3");
+
+        MemberId memberId1 = MemberId.Next();
+        MemberId memberId2 = MemberId.Next();
+        MemberId memberId3 = MemberId.Next();
+        DateTime date = DateTime.Now;
+        int nHours = 2;
+
+        bookableResource.BookHours(memberId1, new(1), date.AddHours(-10), nHours);
+        bookableResource.BookHours(memberId2, new(2), date, nHours);
+        bookableResource.BookHours(memberId3, new(3), date, nHours);
+
+        IEnumerable<Booking> nonExpiredBookings = bookableResource.GetNonExpiredBookings();
+
+        Assert.Equal(2, nonExpiredBookings.Count());
+        Assert.Collection(nonExpiredBookings,
+            booking =>
+                booking.UnitId.Value.Should().Be(2),
+            booking =>
+                booking.UnitId.Value.Should().Be(3)
+        );
+    }
+
+    [Fact]
+    public void GetAllBookingsOfMember()
+    {
+        bookableResource.AddUnit("Unit 1");
+        bookableResource.AddUnit("Unit 2");
+        bookableResource.AddUnit("Unit 3");
+
+        MemberId memberId1 = MemberId.Next();
+        MemberId memberId2 = MemberId.Next();
+        DateTime date = DateTime.Now;
+        int nHours = 2;
+
+        bookableResource.BookHours(memberId1, new(1), date, nHours);
+        bookableResource.BookHours(memberId2, new(2), date, nHours);
+        bookableResource.BookHours(memberId2, new(3), date, nHours);
+
+        IEnumerable<Booking> bookingsOfMember2 = bookableResource.GetAllBookingsOfMember(memberId2);
+
+        Assert.Equal(2, bookingsOfMember2.Count());
+        Assert.Collection(bookingsOfMember2,
+            booking =>
+                booking.MemberId.Should().Be(memberId2),
+            booking =>
+                booking.MemberId.Should().Be(memberId2)
+        );
+    }
+
+    [Fact]
+    public void GetNonExpiredBookingsOfMember()
+    {
+        bookableResource.AddUnit("Unit 1");
+        bookableResource.AddUnit("Unit 2");
+        bookableResource.AddUnit("Unit 3");
+
+        MemberId memberId1 = MemberId.Next();
+        MemberId memberId2 = MemberId.Next();
+        DateTime date = DateTime.Now;
+        int nHours = 2;
+
+        bookableResource.BookHours(memberId1, new(1), date, nHours);
+        bookableResource.BookHours(memberId2, new(2), date.AddHours(-10), nHours);
+        bookableResource.BookHours(memberId2, new(3), date, nHours);
+
+        IEnumerable<Booking> nonExpiredBookingsOfMember2 = bookableResource.GetNonExpiredBookingsOfMember(memberId2);
+
+        Assert.Single(nonExpiredBookingsOfMember2);
+        Assert.Collection(nonExpiredBookingsOfMember2,
+            booking =>
+                booking.MemberId.Should().Be(memberId2)   
+        );
+    }
 }
