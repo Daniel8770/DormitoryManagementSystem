@@ -1,8 +1,9 @@
-create schema [Clubs]
+if not exists (select 1 from sys.schemas where name = 'Clubs')
+begin
+exec('create schema [Clubs]')
+end
 
 go
-
-
 
 
 IF NOT EXISTS (SELECT 1 FROM sys.objects WHERE object_id = OBJECT_ID('Clubs.BookableResource') AND type = 'U')
