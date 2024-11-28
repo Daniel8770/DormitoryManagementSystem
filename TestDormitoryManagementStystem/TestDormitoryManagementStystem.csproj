@@ -46,7 +46,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DormitoryManagementSystem.Application\DormitoryManagementSystem.Application.csproj" />
-    <ProjectReference Include="..\DormitoryManagementSystem.Common\DormitoryManagementSystem.Domain.Common.csproj" />
+    <ProjectReference Include="..\DormitoryManagementSystem.Domain.Common\DormitoryManagementSystem.Domain.Common.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Domain.AccountingContext\DormitoryManagementSystem.Domain.AccountingContext.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Domain.Clubs\DormitoryManagementSystem.Domain.ClubsContext.csproj" />
     <ProjectReference Include="..\DormitoryManagementSystem.Infrastructure\DormitoryManagementSystem.Infrastructure.csproj" />
